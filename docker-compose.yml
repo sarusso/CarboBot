@@ -1,0 +1,34 @@
+version: '3'
+services:
+
+  proxy:
+    image: "carbobot/proxy"
+    container_name: proxy
+    hostname: proxy
+    restart: unless-stopped
+    environment:
+      - PUBLIC_HOST=localhost
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/shared:/shared
+      - ./data/proxy/letsencrypt:/etc/letsencrypt
+      - ./data/proxy/log:/var/log/proxy
+
+  webapp:
+    image: "carbobot/webapp"
+    container_name: webapp
+    hostname: webapp
+    restart: unless-stopped
+    environment:
+      - DJANGO_DEV_SERVER=true
+      - DJANGO_DEBUG=true
+      - DJANGO_LOG_LEVEL=ERROR
+      - WEBAPP_LOG_LEVEL=DEBUG
+      - DJANGO_SECRET_KEY=
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/webapp/data:/data
+      - ./services/webapp/code:/code # For live code changes

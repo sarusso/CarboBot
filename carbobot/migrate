@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Check if we are in the right place
+if [ ! -d ./services ]; then
+    echo "You must run this command from the project's root folder."
+    exit 1
+fi
+
+carbobot/shell webapp "cd /code && source /env.sh && WEBAPP_LOG_LEVEL=ERROR python3 manage.py migrate"
