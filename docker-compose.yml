@@ -25,6 +25,7 @@ services:
       - DJANGO_DEBUG=true
       - DJANGO_LOG_LEVEL=ERROR
       - WEBAPP_LOG_LEVEL=DEBUG
+      - PUBLIC_HOST=http://localhost
       #- DJANGO_SECRET_KEY=
     ports:
       - "8080:8080"

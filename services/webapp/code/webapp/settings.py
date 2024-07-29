@@ -23,6 +23,7 @@ STATIC_ROOT = '/webapp/static'  # Filesystem path
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '4f6y-r63w9y91)+wx($e!$8l3au@+b0oi7-=)3d$j06x2%r$88')
 DEBUG = booleanize(os.environ.get('DJANGO_DEBUG', False))
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [os.environ.get('PUBLIC_HOST', 'http://localhost')]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

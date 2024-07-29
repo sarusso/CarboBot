@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
@@ -215,6 +216,7 @@ def food_observations_add(request):
 
     return render(request, 'food_observations_add.html', {'data': data})
 
+@csrf_exempt
 @public_view
 def chat(request):
 
