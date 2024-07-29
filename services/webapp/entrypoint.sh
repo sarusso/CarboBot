@@ -11,11 +11,13 @@ echo "[INFO] Executing entrypoint..."
 #------------------------------
 #   Data & media dirs
 #------------------------------
-echo "[INFO] Setting up media dir..."
+echo "[INFO] Setting up media and database dirs..."
 
 mkdir -p /data/media 
 chown webapp:webapp /data/media
 
+mkdir -p /data/db 
+chown webapp:webapp /data/db
 
 #------------------------------
 #   Save environment to file

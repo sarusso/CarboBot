@@ -90,7 +90,7 @@ STATIC_URL = 'static/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/data/db.sqlite3',
+        'NAME': '/data/db/carbobot.sqlite3',
     }
 }
 
