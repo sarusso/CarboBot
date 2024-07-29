@@ -23,8 +23,8 @@ fi
 if [[ "x$SERVICE" == "x" ]] ; then
 
     # Build all services
-    NOCACHE=$NOCACHE carbobot/build proxy
-    NOCACHE=$NOCACHE carbobot/build webapp
+    CACHE=$CACHE carbobot/build proxy
+    CACHE=$CACHE carbobot/build webapp
 
 else
 

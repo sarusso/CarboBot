@@ -1,0 +1,82 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/food/">Alimenti</a> <font style="font-size:0.7em">&gt;</font> <a href="">Osservazioni</a> <font style="font-size:0.7em">&gt; aggiungi </font> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Simple page area start -->
+                <br/>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="text-align: center">
+                                {% if data.added %}
+                                <p style="margin-bottom:10px">Ok, nuova osservazione aggiunta.</p>
+                                {% endif %}
+	                                <form action="" method="POST">
+		                                <div style="margin: 0 auto; display:inline-block">
+			                                {% csrf_token %}
+			                                <input type="hidden" name="food_uuid" value="{{ data.food.uuid }}" />
+                                            Nuova osservazione per "<b>{{ data.food.name }}</b>"...
+			                                <table class="dashboard">
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Carboidrati</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="cho" class="generic_input" value="" placeholder="Per 100 grammi" />
+                                              </td>
+                                             </tr>
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Proteine</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="proteins" class="generic_input" value="" placeholder="Per 100 grammi" />
+                                              </td>
+                                             </tr>
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Fibre</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="fibers" class="generic_input" value="" placeholder="Per 100 grammi" />
+                                              </td>
+                                             </tr>
+ 
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Grassi</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="fat" class="generic_input" value="" placeholder="Per 100 grammi" />
+                                              </td>
+                                             </tr>
+
+			                                </table>
+			                                <br />
+                                        <input type="submit" value="Aggiungi">
+			                            </div>
+		                            </form>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Simple page area end -->
+
+{% include "footer.html" %}
+

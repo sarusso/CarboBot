@@ -12,7 +12,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./data/shared:/shared
       - ./data/proxy/letsencrypt:/etc/letsencrypt
       - ./data/proxy/log:/var/log/proxy
 
@@ -26,7 +25,7 @@ services:
       - DJANGO_DEBUG=true
       - DJANGO_LOG_LEVEL=ERROR
       - WEBAPP_LOG_LEVEL=DEBUG
-      - DJANGO_SECRET_KEY=
+      #- DJANGO_SECRET_KEY=
     ports:
       - "8080:8080"
     volumes:

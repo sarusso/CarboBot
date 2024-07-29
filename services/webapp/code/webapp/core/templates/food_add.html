@@ -1,0 +1,74 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/food/">Alimenti</a> <font style="font-size:0.7em">&gt; aggiungi </font>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Simple page area start -->
+                <br/>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="text-align: center">
+                                {% if data.added_name %}
+                                 Ok, aggiunto "{{ data.added_name }}"
+                                {% endif %}
+	                                <form action="" method="POST">
+		                                <div style="margin: 0 auto; display:inline-block">
+			                                {% csrf_token %}
+                                            Nuovo alimento...
+
+			                                <table class="dashboard">
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Nome</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="name" class="generic_input" value="" placeholder="" />
+                                              </td>
+                                             </tr>
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Ingredienti principali</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="main_ingredients" class="generic_input" value="" placeholder="primo ingrediente, secondo ingrediente, ..." />
+                                              </td>
+                                             </tr>
+
+                                             <tr>
+                                              <td style="max-width:400px">
+                                                <b>Porzione tipica</b><br/>
+                                              </td>
+                                              <td>
+                                               <input type="text" name="typical_weight" class="generic_input" value="" placeholder="grammi" />
+                                              </td>
+                                             </tr>
+
+			                                </table>
+			                                <br />
+                                        <input type="submit" value="Aggiungi">
+
+			                            </div>
+		                            </form>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Simple page area end -->
+
+{% include "footer.html" %}
+

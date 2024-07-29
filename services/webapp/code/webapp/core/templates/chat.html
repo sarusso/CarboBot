@@ -1,0 +1,73 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="">Chat</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+
+                <!-- Basics and profile area start --> 
+                <div class="row">
+
+                    <!-- ============================ -->
+                    <!-- |   Basics                 | -->
+                    <!-- ============================ -->
+                    <div class="col-lg-12 mt-5">
+                        <div class="card">
+                            <div class="card-body" style="min-height:300px">
+
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="width:40px;">
+                                </td>
+                                <td style="background-color:#fce2c5; padding: 10px;">
+                                <b>CarboBot</b>: Ciao! Di quale alimento vuoi conoscere i valori nutrizionali?
+                                </td>
+                                </tr>
+                                </table>
+
+                                {% if data.message and data.reply %}
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="background-color:#d2e8fc;  padding: 10px;">
+                                <b>Tu</b>: {{ data.message }}
+                                </td>
+                                <td style="width:40px">
+                                </td>
+                                </tr>
+                                </table>
+
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="width:40px">
+                                </td>
+                                <td style="background-color:#fce2c5; padding: 10px;">
+                                <b>CarboBot</b>: {{ data.reply }}
+                                </td>
+                                </tr>
+                                </table>
+                                {% endif %}
+
+                                <div style="text-align: center">
+	                                <form action="/chat/" method="POST">
+	                                {% csrf_token %}
+	                                <input type="text" style="width:240px" value="" name="message" style='width:95%' required autofocus />
+	                                <input type="submit" value="Invia">
+	                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+{% include "footer.html" %}
+

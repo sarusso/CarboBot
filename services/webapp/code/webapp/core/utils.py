@@ -41,25 +41,3 @@ def format_exception(e):
         return str('Got exception "{}" of type "{}" with traceback:\n{}'.format(e.__class__.__name__, type(e), traceback.format_exc()))[:-1]
     else:
         return str('Got exception "{}" of type "{}" with traceback "{}"'.format(e.__class__.__name__, type(e), traceback.format_exc().replace('\n', '|')))
-
-
-def log_user_activity(level, msg, request, caller=None):
-
-    # Get the caller function name through inspect with some logic
-    #import inspect
-    #caller =  inspect.stack()[1][3]
-    #if caller == "post":
-    #    caller =  inspect.stack()[2][3]
-
-    try:
-        msg = str(caller) + " view - USER " + str(request.user.email) + ": " + str(msg)
-    except AttributeError:
-        msg = str(caller) + " view - USER UNKNOWN: " + str(msg)
-
-    try:
-        level = getattr(logging, level)
-    except:
-        raise
-
-    logger.log(level, msg)
-

@@ -1,0 +1,72 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/food/">Alimenti</a> <font style="font-size:0.7em">&gt;</font> <a href="">Osservazioni</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Thing last sessions area start -->
+                <br/>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if data.food %}
+                                <p style="margin-bottom:10px">
+                                    Osservazioni per "<b>{{ data.food.name }}</b>"
+                                </p>
+                                {% endif %}
+
+                                {% if data.observations %}
+                                <table class="dashboard">
+                                    <tr>
+                                        <td><b>Alimento</b></td>
+                                        <td><b>Ingredienti principali</b></td>
+                                        <td><b>Carboidrati</b></td>
+                                        <td><b>Proteine</b></td>
+                                        <td><b>Fibre</b></td>
+                                        <td><b>Grassi</b></td>
+                                    </tr>
+                                    {% for observation in data.observations %}
+                                     <tr>
+		                                <td>
+                                            {% if data.food %}
+                                            {{observation.food.name}}
+		                                    {% else %}
+                                            <a href="/food_observations/?food_uuid={{observation.food.uuid}}">{{observation.food.name}}</a>
+		                                    {% endif %}
+		                                </td>
+		                                <td>{{observation.food.main_ingredients}}</td>
+                                        <td>{{observation.cho}}</td>
+                                        <td>{{observation.proteins}}</td>
+                                        <td>{{observation.fibers}}</td>
+                                        <td>{{observation.fat}}</td>
+                                        <td>
+                                        <a href="/food_observations_delete/?observation_uuid={{observation.uuid}}">Elimina</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                                {% else %}
+                                Nessuna osservazione ancora registrata{% if data.food %} per "<b>{{ data.food.name }}</b>"{% endif %}.
+                                {% endif %}
+
+                                {% if data.food %}
+                                {% if data.observations %}<br/>{% endif %}
+                                <a href="/food_observations_add/?food_uuid={{data.food.uuid}}">Aggiungi...</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+{% include "footer.html" %}
+

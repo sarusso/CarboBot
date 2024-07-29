@@ -1,0 +1,57 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/food">Alimenti</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <br/>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="query" class="generic_input" autofocus value="" placeholder="{% if data.query %}{{data.query}}{% else %}Cerca...{% endif %}" />
+                                <input type="submit" value="Vai">
+                                </form>
+
+                                {% if data.foods %}
+                                <table class="dashboard">
+                                    <tr>
+                                        <td><b>Nome</b></td>
+                                        <td><b>Ingredienti principali</b></td>
+                                        <td><b>Osservazioni</b></td>
+                                    </tr>
+                                    {% for food in data.foods %}
+                                     <tr>
+		                                <td>{{food.name}}</td>
+		                                <td>{{food.main_ingredients}}</td>
+                                        <td>Totale: {{food.total_observations}} |
+                                        <a href="/food_observations/?food_uuid={{food.uuid}}">Vedi</a> |
+                                        <a href="/food_observations_add/?food_uuid={{food.uuid}}">Aggiungi</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                                {% endif %}
+
+                                <br/>
+                                <a href="/food_add">Aggiungi alimento</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+{% include "footer.html" %}
+

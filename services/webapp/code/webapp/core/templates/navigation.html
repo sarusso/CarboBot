@@ -1,0 +1,80 @@
+        <!-- sidebar menu area start -->
+        <div class="sidebar-menu">
+            <div class="sidebar-header" style="text-align:right">
+                <div class="nav-btn-close" style="margin-top:0px;">
+                    <i class="fa fa-close" style="font-size:2em; color:#ffffff"></i>
+                </div>
+            </div>
+
+            <div class="main-menu">
+                <div class="menu-inner">
+                    <nav>
+                        {% if request.user.is_authenticated %}
+                        <ul class="metismenu">
+                            <li>
+                                <a href="/main"><i class="ti-home"></i><span>Home</span></a>
+                            </li>
+                            <li>
+                                <a href="/chat"><i class="ti-comments"></i><span>Chat</span></a>
+                            </li>
+                            <li>
+                                <a href="/food"><i class="ti-view-list"></i><span>Alimenti</span></a>
+                            </li>
+                            <li>
+                                <a href="/account"><i class="ti-user"></i><span>Account</span></a>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <ul class="metismenu">
+                            <li>
+                                <a href="/main"><i class="ti-home"></i><span>Home</span></a>
+                            </li>
+                            <li>
+                                <a href="/chat"><i class="ti-comments"></i><span>Chat</span></a>
+                            </li>
+                            <li>
+                                <a href="/login"><i class="ti-key"></i><span>Login</span></a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- sidebar menu area end -->
+        <!-- main content area start -->
+        {% if white_background %}
+        <div class="main-content" style="background: #ffffff">
+        {% else %}
+        <div class="main-content">
+        {% endif %}
+
+            <!-- page title area start -->
+            <div class="page-title-area">
+                <div class="row align-items-center">
+
+                    <div class="col-sm-12" style="padding-right:0px; height:60px">
+
+                        <!-- menu button -->
+                        <div class="nav-btn pull-right" style="margin-top:6px; padding-top:10px">
+                            <i class="fa fa-bars" style="font-size:28px"></i>
+                        </div>
+
+                        <div class="nav-btn-placeholder pull-right" style="margin-top:0px; padding-top:10px">
+                            <i class="fa fa-bars" style="font-size:2em"></i>
+                        </div>
+
+                        <div class="breadcrumbs-area clearfix" style="height:50px; padding-top:10px">
+                        </div>
+                    </div>
+
+                    {% if not hide_logo %}
+                    <div class="logo-div"> 
+                        <a href="/">CarboBot</a>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            <!-- page title area end -->
+            <div class="main-content-inner col-xl-10  offset-xl-1 ">

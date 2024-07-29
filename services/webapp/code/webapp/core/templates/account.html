@@ -1,0 +1,48 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/account">Account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Basics and profile area start --> 
+                <div class="row">
+
+                    <!-- ============================ -->
+                    <!-- |   Basics                 | -->
+                    <!-- ============================ -->
+                    <div class="col-lg-12 mt-5">
+                        <div class="card">
+                            <div class="card-body" style="min-height:300px">
+
+                                <form action="/account/" method="POST">
+                                {% csrf_token %}
+                                <b>Username:</b> {{data.user.username}} | <a href="/logout">Logout</a><br/>
+                                <b>Password:</b>
+                                {% if data.edit == 'password' %}    
+                                  <input type="hidden" name="edit" value="password" />
+                                  <input type="password" name="value" style="width:200px" required autofocus />
+                                  <input type="submit" value="Save">
+                                {% else %}
+                                 ******* | <a href="/account/?edit=password">Change</a>
+                                {% endif %}
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Basics and profile area end -->
+
+
+{% include "footer.html" %}
+
