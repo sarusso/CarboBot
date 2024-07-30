@@ -1,15 +1,23 @@
 {% include "header.html" %}
 {% include "navigation.html" %}
 
-                <!-- Small page start -->
-                <br/>
-                <div class="row">
-                    <div class="col-md-8 offset-md-2">
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
-                            <div class="card-body" >
-                                <h1>Login</h1>
-                                <hr>
+                            <div class="card-body pathbar">
+                                <a href="">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
 
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body" style="min-height:300px">
                                 {% if data.error %}
                                 <div class='centerbox-error'>
                                   {{ data.error }}
@@ -21,8 +29,6 @@
                                 {% else %}
                                 <br/>
                                 {% endif %} 
-
-
                                 <div style="text-align:center">
                                   <form class="form-signin" role="form" action='/login/' method='POST'>
                                     {% csrf_token %}
@@ -31,16 +37,13 @@
                                     <input style="max-width:300px; margin: 5px auto" type="password" class="form-control" placeholder="Password" name='password'>
                                     <br />
                                     <input style="width:100px; height:35px; margin: 5px auto; font-size:16px" type='submit' class="btn btn-success" value='Log in' />
-
-
                                   </form>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Small page end -->
+                <!-- Simple page end -->
 
 {% include "footer.html" %}
 

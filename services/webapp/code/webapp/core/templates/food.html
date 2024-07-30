@@ -3,7 +3,7 @@
 
                 <!-- Title area start -->
                 <div class="row title-bar">
-                    <div class="col-xl-12 col-lg-12">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
                             <div class="card-body pathbar">
                                 <a href="/food">Alimenti</a>
@@ -13,11 +13,11 @@
                 </div>
                 <!-- Title area end -->
 
-                <br/>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" style="min-height:300px">
 
                                 <form action="" method="POST">
                                 {% csrf_token %}
@@ -52,6 +52,6 @@
                         </div>
                     </div>
                 </div>
+                <!-- Simple page end -->
 
 {% include "footer.html" %}
-

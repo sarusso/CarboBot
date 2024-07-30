@@ -1,26 +1,21 @@
 {% include "header.html" %}
 {% include "navigation.html" %}
 
-
                 <!-- Title area start -->
                 <div class="row title-bar">
-                    <div class="col-xl-12 col-lg-12">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
                             <div class="card-body pathbar">
-                                <a href="/account">Account</a>
+                                <a href="">Account</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Title area end -->
 
-                <!-- Basics and profile area start --> 
-                <div class="row">
-
-                    <!-- ============================ -->
-                    <!-- |   Basics                 | -->
-                    <!-- ============================ -->
-                    <div class="col-lg-12 mt-5">
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
                             <div class="card-body" style="min-height:300px">
 
@@ -28,7 +23,7 @@
                                 {% csrf_token %}
                                 <b>Username:</b> {{data.user.username}} | <a href="/logout">Logout</a><br/>
                                 <b>Password:</b>
-                                {% if data.edit == 'password' %}    
+                                {% if data.edit == 'password' %}
                                   <input type="hidden" name="edit" value="password" />
                                   <input type="password" name="value" style="width:200px" required autofocus />
                                   <input type="submit" value="Save">
@@ -41,8 +36,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Basics and profile area end -->
-
+                <!-- Simple page end -->
 
 {% include "footer.html" %}
-

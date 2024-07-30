@@ -8,10 +8,10 @@
     Version: 1.0
 
 ----------------------------------------------
-    
+
     CSS INDEX
     ===================
-  
+
     1. Core Css
     2. Dashboard One
         2.1 Sidebar Menu
@@ -3546,7 +3546,8 @@ table.borderless td {
 
     .pathbar  {
         font-size: 1.5rem;
-
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
     }
 
     .pathbar a {

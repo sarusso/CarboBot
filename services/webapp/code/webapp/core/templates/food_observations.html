@@ -13,12 +13,11 @@
                 </div>
                 <!-- Title area end -->
 
-                <!-- Thing last sessions area start -->
-                <br/>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" style="min-height:300px">
                                 {% if data.food %}
                                 <p style="margin-bottom:10px">
                                     Osservazioni per "<b>{{ data.food.name }}</b>"
@@ -67,6 +66,6 @@
                         </div>
                     </div>
                 </div>
+                <!-- Simple page area end -->
 
 {% include "footer.html" %}
-

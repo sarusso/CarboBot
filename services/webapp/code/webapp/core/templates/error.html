@@ -3,7 +3,7 @@
 
                 <!-- Title area start -->
                 <div class="row title-bar">
-                    <div class="col-xl-12 col-lg-12">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
                             <div class="card-body pathbar">
                                 <a href="">Error</a>
@@ -13,23 +13,21 @@
                 </div>
                 <!-- Title area end -->
 
-                <!-- Error message start -->
-                <br/>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
                         <div class="card">
-                            <br/>
-                            <div class='centerbox-error'>
+
+                            <div class="centerbox-error" style="margin-top:30px">
                                 {{data.error}}
                              </div>
 
                             <div class="card-body" style="font-size:16px; margin: 0 auto">
-                                <a href="javascript:history.back()">Go Back</a>
+                                <a href="javascript:history.back()">Back</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Error message end -->
+                <!-- Simple page end -->
 
 {% include "footer.html" %}
-
