@@ -1,0 +1,72 @@
+{ "uuid": "00000000-0000-0000-0000-000000000001", "description": "Insalata caprese con mozzarella di bufala", "ingredients": ["mozzarella", "pomodoro", "basilico"] }
+{ "uuid": "00000000-0000-0000-0000-000000000002", "description": "Insalata di riso con verdure", "ingredients": ["riso", "carote", "piselli"] }
+{ "uuid": "00000000-0000-0000-0000-000000000003", "description": "Insalata di pollo con maionese", "ingredients": ["pollo", "maionese", "sedano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000004", "description": "Insalata di mare con gamberi e calamari", "ingredients": ["gamberi", "calamari", "prezzemolo"] }
+{ "uuid": "00000000-0000-0000-0000-000000000005", "description": "Insalata greca con feta e olive", "ingredients": ["feta", "olive", "pomodoro"] }
+{ "uuid": "00000000-0000-0000-0000-000000000006", "description": "Insalata di farro con pomodorini e basilico", "ingredients": ["farro", "pomodorini", "basilico"] }
+{ "uuid": "00000000-0000-0000-0000-000000000007", "description": "Insalata di ceci con tonno e cipolla", "ingredients": ["ceci", "tonno", "cipolla"] }
+{ "uuid": "00000000-0000-0000-0000-000000000008", "description": "Insalata mista con verdure fresche", "ingredients": ["lattuga", "pomodoro", "carote"] }
+{ "uuid": "00000000-0000-0000-0000-000000000009", "description": "Insalata russa con patate e piselli", "ingredients": ["patate", "piselli", "maionese"] }
+{ "uuid": "00000000-0000-0000-0000-000000000010", "description": "Insalata di patate con prezzemolo", "ingredients": ["patate", "prezzemolo", "cipolla"] }
+{ "uuid": "00000000-0000-0000-0000-000000000011", "description": "Insalata di carciofi con scaglie di parmigiano", "ingredients": ["carciofi", "parmigiano", "limone"] }
+{ "uuid": "00000000-0000-0000-0000-000000000012", "description": "Insalata di quinoa con verdure", "ingredients": ["quinoa", "peperoni", "zucchine"] }
+{ "uuid": "00000000-0000-0000-0000-000000000013", "description": "Insalata di orzo con pomodori secchi", "ingredients": ["orzo", "pomodori secchi", "rucola"] }
+{ "uuid": "00000000-0000-0000-0000-000000000014", "description": "Insalata di spinaci con noci e mele", "ingredients": ["spinaci", "noci", "mele"] }
+{ "uuid": "00000000-0000-0000-0000-000000000015", "description": "Insalata di fagioli con cipolla rossa", "ingredients": ["fagioli", "cipolla rossa", "sedano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000016", "description": "Insalata di granchio con avocado", "ingredients": ["granchio", "avocado", "pomodoro"] }
+{ "uuid": "00000000-0000-0000-0000-000000000017", "description": "Insalata di radicchio con gorgonzola", "ingredients": ["radicchio", "gorgonzola", "noci"] }
+{ "uuid": "00000000-0000-0000-0000-000000000018", "description": "Insalata di pere con rucola e parmigiano", "ingredients": ["pere", "rucola", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000019", "description": "Insalata di finocchi con arance", "ingredients": ["finocchi", "arance", "olive"] }
+{ "uuid": "00000000-0000-0000-0000-000000000020", "description": "Insalata di cavolo cappuccio con carote", "ingredients": ["cavolo cappuccio", "carote", "maionese"] }
+{ "uuid": "00000000-0000-0000-0000-000000000021", "description": "Insalata di peperoni arrostiti", "ingredients": ["peperoni", "aglio", "olio d'oliva"] }
+{ "uuid": "00000000-0000-0000-0000-000000000022", "description": "Insalata di barbabietole con feta", "ingredients": ["barbabietole", "feta", "noci"] }
+{ "uuid": "00000000-0000-0000-0000-000000000023", "description": "Insalata di avocado con pomodorini", "ingredients": ["avocado", "pomodorini", "cipolla"] }
+{ "uuid": "00000000-0000-0000-0000-000000000024", "description": "Insalata di zucca con spinaci e semi di zucca", "ingredients": ["zucca", "spinaci", "semi di zucca"] }
+{ "uuid": "00000000-0000-0000-0000-000000000025", "description": "Insalata di lenticchie con cipolla e prezzemolo", "ingredients": ["lenticchie", "cipolla", "prezzemolo"] }
+{ "uuid": "00000000-0000-0000-0000-000000000026", "description": "Insalata di melanzane grigliate", "ingredients": ["melanzane", "aglio", "olio d'oliva"] }
+{ "uuid": "00000000-0000-0000-0000-000000000027", "description": "Insalata di cavolfiore con olive", "ingredients": ["cavolfiore", "olive", "acciughe"] }
+{ "uuid": "00000000-0000-0000-0000-000000000028", "description": "Insalata di broccoli con mandorle", "ingredients": ["broccoli", "mandorle", "limone"] }
+{ "uuid": "00000000-0000-0000-0000-000000000029", "description": "Insalata di zucchine crude con limone e menta", "ingredients": ["zucchine", "limone", "menta"] }
+{ "uuid": "00000000-0000-0000-0000-000000000030", "description": "Insalata di pomodori con basilico e mozzarella", "ingredients": ["pomodori", "basilico", "mozzarella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000031", "description": "Spaghetti alla carbonara", "ingredients": ["spaghetti", "guanciale", "uova"] }
+{ "uuid": "00000000-0000-0000-0000-000000000032", "description": "Risotto alla milanese", "ingredients": ["riso", "zafferano", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000033", "description": "Lasagne alla bolognese", "ingredients": ["pasta", "ragù", "besciamella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000034", "description": "Pizza margherita", "ingredients": ["farina", "pomodoro", "mozzarella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000035", "description": "Ossobuco alla milanese", "ingredients": ["ossobuco", "pomodoro", "vino bianco"] }
+{ "uuid": "00000000-0000-0000-0000-000000000036", "description": "Tiramisù", "ingredients": ["mascarpone", "caffè", "savoiardi"] }
+{ "uuid": "00000000-0000-0000-0000-000000000037", "description": "Pesto alla genovese", "ingredients": ["basilico", "pinoli", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000038", "description": "Arancini di riso", "ingredients": ["riso", "ragù", "piselli"] }
+{ "uuid": "00000000-0000-0000-0000-000000000039", "description": "Parmigiana di melanzane", "ingredients": ["melanzane", "pomodoro", "mozzarella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000040", "description": "Polenta con funghi", "ingredients": ["polenta", "funghi", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000041", "description": "Focaccia barese", "ingredients": ["farina", "pomodorini", "olive"] }
+{ "uuid": "00000000-0000-0000-0000-000000000042", "description": "Caponata siciliana", "ingredients": ["melanzane", "pomodoro", "olive"] }
+{ "uuid": "00000000-0000-0000-0000-000000000043", "description": "Ravioli di ricotta e spinaci", "ingredients": ["pasta", "ricotta", "spinaci"] }
+{ "uuid": "00000000-0000-0000-0000-000000000044", "description": "Cannoli siciliani", "ingredients": ["ricotta", "scorza d'arancia", "cioccolato"] }
+{ "uuid": "00000000-0000-0000-0000-000000000045", "description": "Bruschetta al pomodoro", "ingredients": ["pane", "pomodoro", "basilico"] }
+{ "uuid": "00000000-0000-0000-0000-000000000046", "description": "Gnocchi alla sorrentina", "ingredients": ["gnocchi", "pomodoro", "mozzarella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000047", "description": "Panzanella toscana", "ingredients": ["pane", "pomodoro", "cipolla"] }
+{ "uuid": "00000000-0000-0000-0000-000000000048", "description": "Frittata di cipolle", "ingredients": ["uova", "cipolla", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000049", "description": "Stracotto di manzo", "ingredients": ["manzo", "vino rosso", "carote"] }
+{ "uuid": "00000000-0000-0000-0000-000000000050", "description": "Ribollita toscana", "ingredients": ["pane", "cavolo nero", "fagioli"] }
+{ "uuid": "00000000-0000-0000-0000-000000000051", "description": "Cozze alla marinara", "ingredients": ["cozze", "pomodoro", "aglio"] }
+{ "uuid": "00000000-0000-0000-0000-000000000052", "description": "Risotto ai funghi porcini", "ingredients": ["riso", "funghi porcini", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000053", "description": "Pappardelle al cinghiale", "ingredients": ["pasta", "cinghiale", "pomodoro"] }
+{ "uuid": "00000000-0000-0000-0000-000000000054", "description": "Biscotti cantucci", "ingredients": ["farina", "mandorle", "zucchero"] }
+{ "uuid": "00000000-0000-0000-0000-000000000055", "description": "Baccalà alla vicentina", "ingredients": ["baccalà", "cipolla", "latte"] }
+{ "uuid": "00000000-0000-0000-0000-000000000056", "description": "Torta caprese", "ingredients": ["cioccolato", "mandorle", "burro"] }
+{ "uuid": "00000000-0000-0000-0000-000000000057", "description": "Insalata caprese", "ingredients": ["mozzarella", "pomodoro", "basilico"] }
+{ "uuid": "00000000-0000-0000-0000-000000000058", "description": "Panettone", "ingredients": ["farina", "uvetta", "canditi"] }
+{ "uuid": "00000000-0000-0000-0000-000000000059", "description": "Zuppa di pesce", "ingredients": ["pesce misto", "pomodoro", "vino bianco"] }
+{ "uuid": "00000000-0000-0000-0000-000000000060", "description": "Pasta e fagioli", "ingredients": ["pasta", "fagioli", "pomodoro"] }
+{ "uuid": "00000000-0000-0000-0000-000000000061", "description": "Arancini di riso classici", "ingredients": ["riso", "ragù", "piselli"] }
+{ "uuid": "00000000-0000-0000-0000-000000000062", "description": "Arancini al burro", "ingredients": ["riso", "burro", "prosciutto"] }
+{ "uuid": "00000000-0000-0000-0000-000000000063", "description": "Arancini al pistacchio", "ingredients": ["riso", "pistacchio", "mozzarella"] }
+{ "uuid": "00000000-0000-0000-0000-000000000064", "description": "Arancini agli spinaci", "ingredients": ["riso", "spinaci", "parmigiano"] }
+{ "uuid": "00000000-0000-0000-0000-000000000065", "description": "Arancini al nero di seppia", "ingredients": ["riso", "nero di seppia", "calamari"] }
+{ "uuid": "00000000-0000-0000-0000-000000000066", "description": "Arancini alla norma", "ingredients": ["riso", "melanzane", "ricotta salata"] }
+{ "uuid": "00000000-0000-0000-0000-000000000067", "description": "Arancini al salmone", "ingredients": ["riso", "salmone", "aneto"] }
+{ "uuid": "00000000-0000-0000-0000-000000000068", "description": "Arancini al gorgonzola", "ingredients": ["riso", "gorgonzola", "noci"] }
+{ "uuid": "00000000-0000-0000-0000-000000000069", "description": "Arancini al curry", "ingredients": ["riso", "curry", "pollo"] }
+{ "uuid": "00000000-0000-0000-0000-000000000070", "description": "Arancini dolci con cioccolato", "ingredients": ["riso", "cioccolato", "zucchero"] }
+{ "uuid": "00000000-0000-0000-0000-000000000071", "description": "Insalata semplice", "ingredients": ["lattuga", "olio", "sale"] }
+{ "uuid": "00000000-0000-0000-0000-000000000072", "description": "Insalata brasiliana", "ingredients": ["lattuga", "olio", "sale"] }

@@ -32,3 +32,35 @@ services:
     volumes:
       - ./data/webapp/data:/data
       - ./services/webapp/code:/code # For live code changes
+
+  search_api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    container_name: carbo_search_api
+    ports:
+      - "3000:80"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./services/api/src:/app
+    command: ["fastapi", "dev", "/app/main.py", "--port", "80", "--host", "0.0.0.0"]
+    # command: ["fastapi", "run", "/app/main.py", "--port", "80", "--host", "0.0.0.0"]
+
+  elasticsearch:
+    build:
+      context: ./services/elastic
+      dockerfile: Dockerfile
+    container_name: carbo_elastic
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+volumes:
+  es_data:
+    driver: local
