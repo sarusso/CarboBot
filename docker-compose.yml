@@ -41,7 +41,7 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./services/search/src:/app
+      - ./services/search/code:/code
 
   elastic:
     image: "carbobot/elastic"

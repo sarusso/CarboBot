@@ -1,12 +1,14 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
-WORKDIR /app
-
+# Install requirements
 COPY requirements.txt /tmp/requirements.txt
-
 RUN pip install --no-cache-dir --upgrade -r /tmp/requirements.txt
 
-COPY ./src /app
+# Copy code
+COPY ./code /code
 
-#CMD ["fastapi", "run", "/app/main.py", "--port", "80"]
-CMD ["fastapi", "dev", "/app/main.py", "--port", "80", "--host", "0.0.0.0"]
+# Set work dir (this is the dir that will be watched for changes)
+WORKDIR /code
+
+# Run command
+CMD ["fastapi", "dev", "/code/main.py", "--port", "80", "--host", "0.0.0.0"]
