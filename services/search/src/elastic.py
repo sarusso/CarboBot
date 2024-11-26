@@ -49,4 +49,4 @@ class ElasticFood(Elasticsearch):
         return self.search(index=self.index_name, body=search_query)
 
 
-es = ElasticFood("http://elasticsearch:9200")
+es = ElasticFood("http://elastic:9200")

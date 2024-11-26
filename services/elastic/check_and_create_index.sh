@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wait for Elasticsearch to start
-until curl -s http://elasticsearch:9200 >/dev/null; do
+until curl -s http://localhost:9200 >/dev/null; do
     echo "Waiting for Elasticsearch to start..."
     sleep 2
 done
@@ -24,6 +24,7 @@ if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:9200/$INDEX_NAME | 
           }
         }
         '
+    echo "Created."
 else
     echo "Index $INDEX_NAME already exists."
 fi
