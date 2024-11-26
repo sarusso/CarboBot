@@ -6,4 +6,15 @@ if [ ! -d ./services ]; then
     exit 1
 fi
 
+# Populate search with demo data
+while IFS= read -r line
+do
+  curl -X 'POST' \
+    'http://localhost:3000/api/v1/add/' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d "$line"
+done < services/search/examples.json
+
+# Populate webapp
 carbobot/shell webapp "cd /code && source /env.sh && WEBAPP_LOG_LEVEL=ERROR python3 manage.py core_populate"

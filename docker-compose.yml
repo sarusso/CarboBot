@@ -32,3 +32,27 @@ services:
     volumes:
       - ./data/webapp/data:/data
       - ./services/webapp/code:/code # For live code changes
+
+  search:
+    image: "carbobot/search"
+    container_name: search
+    hostname: search
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./services/search/src:/app
+
+  elastic:
+    image: "carbobot/elastic"
+    container_name: elastic
+    hostname: elastic
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./data/elastic/data:/usr/share/elasticsearch/data

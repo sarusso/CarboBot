@@ -25,6 +25,8 @@ if [[ "x$SERVICE" == "x" ]] ; then
     # Build all services
     CACHE=$CACHE carbobot/build proxy
     CACHE=$CACHE carbobot/build webapp
+    CACHE=$CACHE carbobot/build search
+    CACHE=$CACHE carbobot/build elastic
 
 else
 
