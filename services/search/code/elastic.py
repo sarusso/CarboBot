@@ -10,15 +10,15 @@ class ElasticFood(Elasticsearch):
         super().__init__(*args, **kwargs)
         self.default_index_name = "food_index"
 
-    def init(self, index_name=None):
+    def init_index(self, index_name=None):
         self.create_index(self.default_index_name if not index_name else index_name)
 
-    def reset(self, index_name=None):
+    def reset_index(self, index_name=None):
         if self.indices.exists(index=self.default_index_name if not index_name else index_name):
             self.indices.delete(index=self.default_index_name if not index_name else index_name)
         self.create_index(self.default_index_name if not index_name else index_name)
 
-    def delete(self, index_name=None):
+    def delete_index(self, index_name=None):
         self.indices.delete(index=self.default_index_name if not index_name else index_name)
 
     def create_index(self, index_name=None):
@@ -44,10 +44,13 @@ class ElasticFood(Elasticsearch):
         except NotFoundError as e:
             print(f"Error checking/creating index: {e}")
 
-    def add(self, item, index_name=None):
+    def add_item(self, item, index_name=None):
         return self.index(index=self.default_index_name if not index_name else index_name, id=str(item["uuid"]), body=item)
 
-    def search_q(self, q, index_name=None):
+    def delete_item(self, uuid, index_name=None):
+        return self.delete(index=self.default_index_name if not index_name else index_name, id=uuid)
+
+    def query(self, q, index_name=None):
         #search_query = {"query": {"fuzzy": {"description": q}}}
         search_query = {
                           "query": {

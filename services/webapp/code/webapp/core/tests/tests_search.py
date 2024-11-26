@@ -1,6 +1,7 @@
 import requests
 from django.test import TestCase
 from ..models import Food
+from ..utils import SearchService
 from django.contrib.auth.models import User
 import time
 
@@ -199,3 +200,43 @@ class TestBaseOperations(TestCase):
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(response.json()),0)
 
+
+    def test_food_model_with_search_service(self):
+
+        search_service = SearchService(index='food_index_test')
+
+        food1 = Food(uuid='00000000-0000-0000-0000-000000000100',
+                     name='My Food',
+                     main_ingredients = ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
+                     created_by=self.test_user )
+        food1.save(search_service=search_service)
+        food2 = Food(uuid='00000000-0000-0000-0000-000000000101',
+                     name='My Other Food',
+                     main_ingredients = ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
+                     created_by=self.test_user )
+        food2.save(search_service=search_service)
+        time.sleep(1)
+
+        # Can we search them back with the search service?
+        hits = search_service.query('Food')
+        self.assertEqual(len(hits),2)
+        self.assertEqual(hits[0]['_id'],'00000000-0000-0000-0000-000000000100')
+        self.assertEqual(hits[1]['_id'],'00000000-0000-0000-0000-000000000101')
+
+        # Ok, now test the built-in Food query
+        results = Food.query('Food', search_service=search_service)
+        self.assertEqual(len(results),2)
+        self.assertEqual(results[0].uuid,food1.uuid)
+        self.assertEqual(results[1].uuid,food2.uuid)
+
+        # Check another save is not possible
+        food1.name = 'Changed name'
+        with self.assertRaises(Exception):
+            food1.save()
+
+        # Check the delete
+        food1.delete(search_service=search_service)
+        time.sleep(1)
+        results = Food.query('Food', search_service=search_service)
+        self.assertEqual(len(results),1)
+        self.assertEqual(results[0].uuid,food2.uuid)

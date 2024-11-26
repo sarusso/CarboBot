@@ -3,9 +3,10 @@ import logging
 from django.db import models
 from django.contrib.auth.models import User
 from .fileds import JSONField
+from .utils import SearchService
 
 # Setup logging
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
 
 #=========================
 #  Integration
@@ -21,14 +22,45 @@ class Food(models.Model):
     def __str__(self):
         return str('Food "{}"'.format(self.name))
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, search_service=None, **kwargs):
         if not self.uuid:
             self.uuid = str(uuid.uuid4())
+
+        if not self.id:
+            if not search_service:
+                search_service = SearchService()
+
+            item = {"uuid": self.uuid ,
+                    "description": self.name,
+                    "ingredients": self.main_ingredients}
+
+            search_service.add(item)
+
+        else:
+            raise Exception('Cannot edit food yet. Delete and re-create if you need to.')
+
         super(Food, self).save(*args, **kwargs)
+
+    def delete(self, *args, search_service=None, **kwargs):
+        if not search_service:
+            search_service = SearchService()
+        item = {'uuid':self.uuid, 'description': self.name, 'ingredients': self.main_ingredients}
+        search_service.delete(item)
+        super(Food, self).delete(*args, **kwargs)
 
     @property
     def total_observations(self):
         return self.observations.count()
+
+    @classmethod
+    def query(cls, q, search_service=None):
+        if not search_service:
+            search_service = SearchService()
+        food_objects = []
+        for entry in search_service.query(q):
+            food_objects.append(Food.objects.get(uuid=entry['_id']))
+        return food_objects
+
 
 class FoodObservation(models.Model):
     uuid = models.CharField('UUID', max_length=36, blank=True, null=True)

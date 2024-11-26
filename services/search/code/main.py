@@ -40,7 +40,7 @@ class Item(BaseModel):
     uuid: UUID
     description: str
     ingredients: List[str]
-    index_name: str
+    index_name: Optional[str] = None
 
     @validator("ingredients")
     def check_ingredients_length(cls, v):
@@ -61,7 +61,7 @@ async def manage(command: Command):
     # Handle command
     if command.command == "init":
         try:
-            es.init(index_name=command.index_name)
+            es.init_index(index_name=command.index_name)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -70,7 +70,7 @@ async def manage(command: Command):
         return {"message": "Init successfully executed"}
     elif command.command == "reset":
         try:
-            es.reset(index_name=command.index_name)
+            es.reset_index(index_name=command.index_name)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -79,7 +79,7 @@ async def manage(command: Command):
         return {"message": "Reset successfully executed"}
     elif command.command == "delete":
         try:
-            es.delete(index_name=command.index_name)
+            es.delete_index(index_name=command.index_name)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -94,12 +94,28 @@ async def add_item(item: Item):
         item_dict = item.dict()
         item_dict["uuid"] = str(item_dict["uuid"])
         index_name = item_dict.get('index_name', None)
-        response = es.add(item_dict, index_name=index_name)
+        response = es.add_item(item_dict, index_name=index_name)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error during add: {}".format(e),
         )
+    logger.info('Added {}'.format(item_dict))
+    return response
+
+@app.post("/api/v1/delete/")
+async def delete_item(item: Item):
+    try:
+        item_dict = item.dict()
+        item_dict["uuid"] = str(item_dict["uuid"])
+        index_name = item_dict.get('index_name', None)
+        response = es.delete_item(uuid=item_dict["uuid"], index_name=index_name)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error during delete: {}".format(e),
+        )
+    logger.info('Deleted {}'.format(item_dict["uuid"] ))
     return response
 
 
@@ -111,7 +127,7 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
 
 
     # Perform the search
-    elastic_response = es.search_q(q,index_name)
+    elastic_response = es.query(q,index_name)
 
     # ------------------
     # Filter hits
@@ -141,7 +157,6 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     # Filter based on the main ingredient
     filtered_high_score_hits = []
     for hit in high_score_hits:
-        #logger.critical('--> {} {}'.format(hit['_source']['description'], hit["_score"] ))
         if hit['_source']['ingredients'][0] == reference_main_ingredient:
             filtered_high_score_hits.append(hit)
 
