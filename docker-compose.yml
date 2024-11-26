@@ -38,6 +38,8 @@ services:
     container_name: search
     hostname: search
     restart: unless-stopped
+    environment:
+      - LOG_LEVEL=DEBUG
     ports:
       - "3000:80"
     volumes:

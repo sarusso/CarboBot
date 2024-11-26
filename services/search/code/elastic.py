@@ -1,26 +1,30 @@
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 
+import logging
+logger = logging.getLogger('uvicorn') # TODO: meh...
 
 class ElasticFood(Elasticsearch):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.index_name = "food_index"
+        self.default_index_name = "food_index"
 
-    def init(self):
-        self.create_index()
+    def init(self, index_name=None):
+        self.create_index(self.default_index_name if not index_name else index_name)
 
-    def reset(self):
-        self.indices.delete(self.index_name)
-        self.create_index()
+    def reset(self, index_name=None):
+        if self.indices.exists(index=self.default_index_name if not index_name else index_name):
+            self.indices.delete(index=self.default_index_name if not index_name else index_name)
+        self.create_index(self.default_index_name if not index_name else index_name)
 
-    def delete(self):
-        self.indices.delete(self.index_name)
+    def delete(self, index_name=None):
+        self.indices.delete(index=self.default_index_name if not index_name else index_name)
 
-    def create_index(self):
+    def create_index(self, index_name=None):
+        index_name = self.default_index_name if not index_name else index_name
         try:
-            if not self.indices.exists(index=self.index_name):
+            if not self.indices.exists(index=self.default_index_name if not index_name else index_name):
                 # Define the index mapping
                 mapping = {
                     "settings": {"number_of_shards": 1, "number_of_replicas": 1},
@@ -33,20 +37,23 @@ class ElasticFood(Elasticsearch):
                     },
                 }
                 # Create the index with the mapping
-                self.indices.create(index=self.index_name, body=mapping)
-                print(f"Index '{self.index_name}' created.")
+                self.indices.create(index=index_name, body=mapping)
+                print(f"Index '{index_name}' created.")
             else:
-                print(f"Index '{self.index_name}' already exists.")
+                print(f"Index '{index_name}' already exists.")
         except NotFoundError as e:
             print(f"Error checking/creating index: {e}")
 
-    def add(self, item):
-        return self.index(index=self.index_name, id=str(item["uuid"]), body=item)
+    def add(self, item, index_name=None):
+        return self.index(index=self.default_index_name if not index_name else index_name, id=str(item["uuid"]), body=item)
 
-    def search_q(self, q):
+    def search_q(self, q, index_name=None):
         search_query = {"query": {"fuzzy": {"description": q}}}
-
-        return self.search(index=self.index_name, body=search_query)
+        index_name = self.default_index_name if not index_name else index_name
+        logger.debug('Searching elastic for "%s" on "%s"', q, index_name )
+        results = self.search(index=index_name, body=search_query)
+        logger.debug('Got elastic results: "%s"', results)
+        return results
 
 
 es = ElasticFood("http://elastic:9200")
