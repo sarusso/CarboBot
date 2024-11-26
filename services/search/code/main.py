@@ -7,8 +7,8 @@ from enum import Enum
 from .elastic import es
 
 # Conf
-MIN_SCORE = float(os.environ.get('MIN_SCORE', 0.8))
-MAX_DIFF = float(os.environ.get('MAX_DIFF', 0.02))
+MIN_SCORE = float(os.environ.get('MIN_SCORE', 0.5))
+MAX_DIFF = float(os.environ.get('MAX_DIFF', 0.3))
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'ERROR')
 
 
@@ -109,6 +109,7 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
                  min_score: Optional[float] = None,
                  max_diff: Optional[float] = None):
 
+
     # Perform the search
     elastic_response = es.search_q(q,index_name)
 
@@ -117,22 +118,40 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     # ------------------
     # TODO:  maybe use k-means with _score and 1 ingredient as an enum
 
-    min_score = MIN_SCORE if min_score is None else min_score
-    max_diff = MAX_DIFF if max_diff is None else max_diff
-
+    # Shortcut
     hits = elastic_response["hits"]["hits"]
+
+    # Ensure we have some hits
     if not hits:
         return []
 
+    # Set the boundaries
+    min_score = MIN_SCORE if min_score is None else min_score
+    max_diff = MAX_DIFF if max_diff is None else max_diff
+
+    # Only keep the high scoring hits
     max_score = elastic_response["hits"]["max_score"]
     high_score_hits = [hit for hit in hits if hit["_score"] >= min_score]
+    if not high_score_hits:
+        return []
 
-    # Compute relative score
+    # Set the reference main ingredient
+    reference_main_ingredient = high_score_hits[0]['_source']['ingredients'][0]
+
+    # Filter based on the main ingredient
+    filtered_high_score_hits = []
     for hit in high_score_hits:
+        #logger.critical('--> {} {}'.format(hit['_source']['description'], hit["_score"] ))
+        if hit['_source']['ingredients'][0] == reference_main_ingredient:
+            filtered_high_score_hits.append(hit)
+
+    # Compute the relative score
+    for hit in filtered_high_score_hits:
         hit['_relative_score'] = hit["_score"] / max_score
 
+    # Get now only the close hits based on the relative score
     close_hits = [
-        hit for hit in high_score_hits if hit["_relative_score"] > (1-max_diff)
+        hit for hit in filtered_high_score_hits if hit["_relative_score"] >= (1-max_diff)
     ]
 
     return close_hits

@@ -48,7 +48,17 @@ class ElasticFood(Elasticsearch):
         return self.index(index=self.default_index_name if not index_name else index_name, id=str(item["uuid"]), body=item)
 
     def search_q(self, q, index_name=None):
-        search_query = {"query": {"fuzzy": {"description": q}}}
+        #search_query = {"query": {"fuzzy": {"description": q}}}
+        search_query = {
+                          "query": {
+                            "multi_match": {
+                              "query": q,
+                              "fields": ["description"],
+                              "fuzziness": "AUTO",
+                              "operator": "and"
+                            }
+                          }
+                        }
         index_name = self.default_index_name if not index_name else index_name
         logger.debug('Searching elastic for "%s" on "%s"', q, index_name )
         results = self.search(index=index_name, body=search_query)
