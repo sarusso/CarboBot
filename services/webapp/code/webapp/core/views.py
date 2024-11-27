@@ -122,7 +122,10 @@ def food_add(request):
     if request.method == 'POST':
         name = request.POST.get('name', None)
         main_ingredients = request.POST.get('main_ingredients', None)
-        typical_weight = request.POST.get('typical_weight', None)
+        typical_serving = request.POST.get('typical_serving', None)
+        small_serving = request.POST.get('small_serving', None)
+        medium_serving = request.POST.get('medium_serving', None)
+        large_serving = request.POST.get('large_serving', None)
 
         if not name:
             raise ErrorMessage('Food name is required')
@@ -130,13 +133,21 @@ def food_add(request):
         if not main:
             raise ErrorMessage('Food name is required')
 
-        if typical_weight:
-            try:
-                typical_weigth = int(typical_weight)
-            except:
-                raise ErrorMessage('Typical weight not valid')
-        else:
-            typical_weight = None # Covers the empty string case
+        def make_int(parameter, name):
+            if parameter:
+                try:
+                    parameter = int(parameter)
+                except:
+                    raise ErrorMessage('Value for "{}" is not valid'.format(name))
+            else:
+                parameter = None # Covers the empty string case
+            return parameter
+
+        # Make parameters int
+        typical_serving = make_int(typical_serving, 'typical_serving')
+        small_serving = make_int(small_serving, 'small_serving')
+        medium_serving = make_int(medium_serving, 'medium_serving')
+        large_serving = make_int(large_serving, 'large_serving')
 
         main_ingredients = [ingredient.strip() for ingredient in main_ingredients.split(',')]
 
@@ -146,7 +157,10 @@ def food_add(request):
         Food.objects.create(created_by = request.user,
                             name = name,
                             main_ingredients = main_ingredients,
-                            typical_weight = typical_weight)
+                            typical_serving = typical_serving,
+                            small_serving = small_serving,
+                            medium_serving = medium_serving,
+                            large_serving = large_serving)
 
         data['added_name'] = name
 
