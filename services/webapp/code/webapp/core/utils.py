@@ -82,3 +82,70 @@ class SearchService():
             return response.json()
 
 
+def message_parser(message):
+
+    # Prepare
+    parsed = {}
+    parsed['food'] = None
+    parsed['amount'] = None
+    parsed['serving'] = None
+    parsed['details'] = False
+
+    message = message.lower().strip()
+
+    # Details?
+    if message.endswith('con dettagli'):
+        parsed['details'] = True
+        message = message.replace('con dettagli', '')
+        message = message.strip()
+    if message.endswith('dettagli'):
+        parsed['details'] = True
+        message = message.replace('dettagli', '')
+        message = message.strip()
+
+    # Parse amount
+    message_elements = message.split(' ')
+    if message_elements[0].endswith('g'):
+        message_elements[0] = message_elements[0][0:-1]
+    try:
+        parsed['amount'] = int(message_elements[0])
+    except:
+        pass
+    else:
+        if message_elements[1] == 'g':
+            message = ' '.join(message_elements[2:])
+        else:
+            message = ' '.join(message_elements[1:])
+
+    # Parse serving
+    small_serving_keywords = ['piccola', 'piccolo', 'piccoli', 'poco', 'poca', 'pochi']
+    medium_serving_keywords = ['media', 'medio', 'medi']
+    large_serving_keywords = ['grande', 'grandi', 'tanta', 'tanto', 'tanti']
+
+    for keyword in small_serving_keywords:
+        if message.startswith(keyword):
+            message = message.replace(keyword, '')
+            message = message.strip()
+            parsed['serving'] = 's'
+            break
+
+    for keyword in medium_serving_keywords:
+        if message.startswith(keyword):
+            message = message.replace(keyword, '')
+            message = message.strip()
+            parsed['serving'] = 'm'
+            break
+
+    for keyword in large_serving_keywords:
+        if message.startswith(keyword):
+            message = message.replace(keyword, '')
+            message = message.strip()
+            parsed['serving'] = 'l'
+            break
+
+    # Set food now
+    parsed['food'] = message
+
+    # Return
+    return parsed
+

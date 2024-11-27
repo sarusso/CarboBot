@@ -1,7 +1,7 @@
 import requests
 from django.test import TestCase
 from ..models import Food
-from ..utils import SearchService
+from ..utils import SearchService, message_parser
 from django.contrib.auth.models import User
 import time
 
@@ -43,7 +43,7 @@ def add_to_test_index(data):
     return response
 
 
-class TestBaseOperations(TestCase):
+class TestSearchService(TestCase):
 
     # @classmethod
     # def setUpClass(cls):
@@ -62,7 +62,7 @@ class TestBaseOperations(TestCase):
     def tearDown(self):
         delete_test_index()
 
-    def test_search_service(self):
+    def test_search_service_basic(self):
 
         # Nothing there
         url = 'http://search/api/v1/search?q=insalata&index_name=food_index_test&min_score=0&max_diff=1'
@@ -201,7 +201,7 @@ class TestBaseOperations(TestCase):
         self.assertEqual(len(response.json()),0)
 
 
-    def test_food_model_with_search_service(self):
+    def test_search_service_with_food_model(self):
 
         search_service = SearchService(index='food_index_test')
 
@@ -240,3 +240,63 @@ class TestBaseOperations(TestCase):
         results = Food.query('Food', search_service=search_service)
         self.assertEqual(len(results),1)
         self.assertEqual(results[0].uuid,food2.uuid)
+
+
+class TestMessageParser(TestCase):
+
+    def test_message_parser_basic(self):
+
+        parsed = message_parser('pasta al pomodoro')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], None)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('80g pasta al pomodoro')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], 80)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('80 pasta al pomodoro')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], 80)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('80 g pasta al pomodoro')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], 80)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('80 g pasta al pomodoro dettagli')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], 80)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], True)
+
+        parsed = message_parser('80 g pasta al pomodoro con dettagli')
+        self.assertEqual(parsed['food'], 'pasta al pomodoro')
+        self.assertEqual(parsed['amount'], 80)
+        self.assertEqual(parsed['serving'], None)
+        self.assertEqual(parsed['details'], True)
+
+        parsed = message_parser('piccola brioche')
+        self.assertEqual(parsed['food'], 'brioche')
+        self.assertEqual(parsed['amount'], None)
+        self.assertEqual(parsed['serving'], 's')
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('poca pasta')
+        self.assertEqual(parsed['food'], 'pasta')
+        self.assertEqual(parsed['amount'], None)
+        self.assertEqual(parsed['serving'], 's')
+        self.assertEqual(parsed['details'], False)
+
+        parsed = message_parser('grande pizza')
+        self.assertEqual(parsed['food'], 'pizza')
+        self.assertEqual(parsed['amount'], None)
+        self.assertEqual(parsed['serving'], 'l')
+        self.assertEqual(parsed['details'], False)
+
