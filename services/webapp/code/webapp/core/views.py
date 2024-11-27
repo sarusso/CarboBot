@@ -203,10 +203,10 @@ def food_observations_add(request):
 
         FoodObservation.objects.create(created_by = request.user,
                                        food = food,
-                                       cho_ratio = cho/100,
-                                       protein_ratio = proteins/100,
-                                       fiber_ratio = fibers/100,
-                                       fat_ratio = fat/100)
+                                       cho_ratio = cho/100 if cho else None,
+                                       protein_ratio = proteins/100 if proteins else None,
+                                       fiber_ratio = fibers/100 if fibers else None,
+                                       fat_ratio = fat/100 if fat else None)
         data['added'] = True
 
     else:
@@ -230,7 +230,7 @@ def chat(request):
         data['message'] = message
 
         # Filter foods
-        foods = Food.objects.filter(name__icontains=message)
+        foods = Food.query(message)
         if not foods:
             data['reply']  = 'Non ho trovato nessun alimento specifico corrispondente a "{}". Puoi provare ad essere più generale?'.format(message)
             return render(request, 'chat.html', {'data': data})

@@ -74,7 +74,7 @@ class SearchService():
             logger.debug('Using index "%s"', self.index)
             url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q, self.index, min_score, max_diff)
         else:
-            url = 'http://{}/api/v1/search?q={}min_score={}&max_diff={}'.format(self.host, q, min_score, max_diff)
+            url = 'http://{}/api/v1/search?q={}&min_score={}&max_diff={}'.format(self.host, q, min_score, max_diff)
         response = requests.get(url)
         if not response.status_code == 200:
             raise Exception(response.content)
