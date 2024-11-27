@@ -45,10 +45,14 @@ class ElasticFood(Elasticsearch):
             print(f"Error checking/creating index: {e}")
 
     def add_item(self, item, index_name=None):
-        return self.index(index=self.default_index_name if not index_name else index_name, id=str(item["uuid"]), body=item)
+        index_name = self.default_index_name if not index_name else index_name
+        logger.debug('ElasticFood: adding "{}" on index "{}"'.format(str(item["uuid"]), index_name))
+        return self.index(index=index_name, id=str(item["uuid"]), body=item)
 
     def delete_item(self, uuid, index_name=None):
-        return self.delete(index=self.default_index_name if not index_name else index_name, id=uuid)
+        index_name = self.default_index_name if not index_name else index_name
+        logger.debug('ElasticFood: deleting "{}" on index "{}"'.format(uuid, index_name))
+        return self.delete(index=index_name, id=uuid)
 
     def query(self, q, index_name=None):
         #search_query = {"query": {"fuzzy": {"description": q}}}
@@ -63,9 +67,9 @@ class ElasticFood(Elasticsearch):
                           }
                         }
         index_name = self.default_index_name if not index_name else index_name
-        logger.debug('Searching elastic for "%s" on "%s"', q, index_name )
+        logger.debug('ElasticFood: searching for "{}" on index "{}"'.format(q, index_name))
         results = self.search(index=index_name, body=search_query)
-        logger.debug('Got elastic results: "%s"', results)
+        logger.debug('ElasticFood: got results: "%s"', results)
         return results
 
 

@@ -44,8 +44,8 @@ class Item(BaseModel):
 
     @validator("ingredients")
     def check_ingredients_length(cls, v):
-        if len(v) < 3:
-            raise ValueError('"ingredients" must have at least 3 elements')
+        if len(v) < 1:
+            raise ValueError('"ingredients" must have at least one element')
         return v
 
 
@@ -150,6 +150,8 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     high_score_hits = [hit for hit in hits if hit["_score"] >= min_score]
     if not high_score_hits:
         return []
+    logger.debug('high_score_hits={}'.format(high_score_hits))
+
 
     # Set the reference main ingredient
     reference_main_ingredient = high_score_hits[0]['_source']['ingredients'][0]
@@ -159,6 +161,7 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     for hit in high_score_hits:
         if hit['_source']['ingredients'][0] == reference_main_ingredient:
             filtered_high_score_hits.append(hit)
+    logger.debug('filtered_high_score_hits={}'.format(filtered_high_score_hits))
 
     # Compute the relative score
     for hit in filtered_high_score_hits:
@@ -168,6 +171,7 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     close_hits = [
         hit for hit in filtered_high_score_hits if hit["_relative_score"] >= (1-max_diff)
     ]
+    logger.debug('close_hits={}'.format(close_hits))
 
     return close_hits
 
