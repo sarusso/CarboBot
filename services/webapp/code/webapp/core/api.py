@@ -4,7 +4,7 @@ import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.response import Response
+from .bot import Bot
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -71,8 +71,15 @@ class TelegramAPI(APIView):
 
         telegram_chat_id = request.data['message']['chat']['id']
         message = request.data['message']['text'].strip()
-        logger.debug('Received message: %s', message)
-        telegram_client.send_message(telegram_chat_id, 'Received message: *"{}"*')
+        logger.debug('Received message: "%s"', message)
+        if message == '/start':
+            reply = 'Benvenuto su CarboBot!'
+        else:
+            bot = Bot()
+            reply = bot.answer(message)
+        logger.debug('Reply: "%s"', reply)
+
+        telegram_client.send_message(telegram_chat_id, reply)
 
         return ok200('OK')
 
