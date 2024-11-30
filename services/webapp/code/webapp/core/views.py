@@ -14,6 +14,7 @@ import uuid
 import logging
 logger = logging.getLogger(__name__)
 
+conversations_cache = {}
 
 #=========================
 #  User login view
@@ -338,9 +339,20 @@ def food_observations_add(request):
 def chat(request):
 
     data = {}
+
     if request.method == 'POST':
 
-        # Get back the message
+        # Get the conversation id
+        conversation_id = request.POST.get('conversation_id', None)
+
+        # Load previous messages
+        if conversation_id in conversations_cache:
+            previous_messages = conversations_cache[conversation_id]
+            pass
+        else:
+            conversations_cache[conversation_id] = []
+
+        # Get the message
         message = request.POST.get('message', None)
         if not message:
             raise ErrorMessage('Got no message at all')
@@ -349,9 +361,17 @@ def chat(request):
         bot = Bot()
         reply= bot.answer(message)
 
-        # Set the original message and the reply in the data
-        data['message'] = message
-        data['reply'] = reply
+        # Add the original message and the reply in the conversation data data
+        conversations_cache[conversation_id].append({'message':message, 'reply':reply})
+
+        # And set the conversation in the page data
+        data['conversation'] = conversations_cache[conversation_id]
+
+    else:
+        conversation_id = str(uuid.uuid4())
+
+    # Set the conversation id in the page
+    data['conversation_id'] = conversation_id
 
     return render(request, 'chat.html', {'data': data})
 
