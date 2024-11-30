@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from .models import Food, FoodObservation
 from .decorators import public_view, private_view
 from .exceptions import ErrorMessage
+from .bot import Bot
 
 # Setup logging
 import logging
@@ -237,65 +238,17 @@ def chat(request):
     data = {}
     if request.method == 'POST':
 
-        # Get back the food
+        # Get back the message
         message = request.POST.get('message', None)
         if not message:
             raise ErrorMessage('Got no message at all')
+
+        # Ask the bot to answer
+        bot = Bot()
+        reply= bot.answer(message)
+
+        # Set the original message and the reply in the data
         data['message'] = message
-
-        # Filter foods
-        foods = Food.query(message)
-        if not foods:
-            data['reply']  = 'Non ho trovato nessun alimento specifico corrispondente a "{}". Puoi provare ad essere più generale?'.format(message)
-            return render(request, 'chat.html', {'data': data})
-
-        # Process all observations for matching foods
-        cho_observations = []
-        protein_observations = []
-        fiber_observations = []
-        fat_observations = []
-        for food in foods:
-            for observation in food.observations.all():
-                if observation.cho is not None:
-                    cho_observations.append(observation.cho)
-                if observation.proteins is not None:
-                    protein_observations.append(observation.proteins)
-                if observation.fibers is not None:
-                    fiber_observations.append(observation.fibers)
-                if observation.fat is not None:
-                    fat_observations.append(observation.fat)
-
-        if not cho_observations and not protein_observations and not fiber_observations and not fat_observations:
-            data['reply']  = 'Non ho trovato nessun alimento specifico corrispondente a "{}". Puoi provare ad essere più generale?'.format(message)
-            return render(request, 'chat.html', {'data': data})
-
-        # Compute averages
-        if cho_observations:
-            cho = sum(cho_observations) / len(cho_observations)
-        if protein_observations:
-            proteins = sum(protein_observations) / len(protein_observations)
-        if fiber_observations:
-            fibers = sum(fiber_observations) / len(fiber_observations)
-        if fat_observations:
-            fat = sum(fat_observations) / len(fat_observations)
-
-        # Compose reply
-        matching_foods_string = ''
-        for food in foods:
-            matching_foods_string += '{}, '.format(food.name)
-        matching_foods_string = matching_foods_string[0:-2]
-        reply =  'Per "{}" ho trovato "{}". Valori nutrizionali medi: '.format(message, matching_foods_string)
-        if cho_observations:
-            reply += '{}g di carboidrati, '.format(cho)
-        if protein_observations:
-            reply += '{}g di proteine, '.format(proteins)
-        if fiber_observations:
-            reply += '{}g di fibre e '.format(fibers)
-        if fat_observations:
-            reply += '{}g di grassi '.format(fat)
-        reply += 'per 100g. '
-
-        # Set the reply in the data
         data['reply'] = reply
 
     return render(request, 'chat.html', {'data': data})
