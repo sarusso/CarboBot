@@ -49,11 +49,14 @@ class Bot():
             fat = round(sum(fat_observations) / len(fat_observations))
 
         # Compose reply
-        matching_foods_string = ''
-        for food in foods:
-            matching_foods_string += '{}, '.format(food.name)
-        matching_foods_string = matching_foods_string[0:-2]
-        reply =  'Per "{}" ho trovato: "{}". '.format(parsed['food'], matching_foods_string)
+        if len(foods) == 1:
+            reply =  'Ho trovato "{}". '.format(parsed['food'])
+        else:
+            matching_foods_string = ''
+            for food in foods:
+                matching_foods_string += '{}, '.format(food.name)
+            matching_foods_string = matching_foods_string[0:-2]
+            reply =  'Per "{}" ho trovato: "{}". '.format(parsed['food'], matching_foods_string)
 
         if parsed['details']:
             reply += 'Valori nutrizionali medi: '
@@ -70,54 +73,68 @@ class Bot():
             if cho_observations:
                 reply += 'Mediamente, {}g di carboidrati per 100g. '.format(cho)
 
-        # Also provide info on typical servings if they are all the same
-        # What serving to evaluate
-        serving = None
-        abort = False
-        for food in foods:
+        # Handle serving if no amount given
+        if not parsed['amount']:
+            servings = []
+            servings_all_the_same = True
+            for food in foods:
 
-            if parsed['serving'] == 's' and food.small_serving is not None:
-                if serving is None:
-                    serving = food.small_serving
-                else:
-                    if serving != food.small_serving:
-                        abort = True
-            elif parsed['serving'] == 'm' and food.medium_serving is not None:
-                if serving is None:
-                    serving = food.medium_serving
-                else:
-                    if serving != food.medium_serving:
-                        abort = True
-            elif parsed['serving'] == 'l' and food.large_serving is not None:
-                if serving is not None:
-                    serving = food.small_serving
-                else:
-                    if serving != food.small_serving:
-                        abort = True
-            else:
-                if food.typical_serving is not None:
-                    if serving is None:
-                        serving = food.typical_serving
+                # Small serving
+                if parsed['serving'] == 's' and food.small_serving is not None:
+                    if not servings:
+                        servings.append(food.small_serving)
                     else:
-                        if serving != food.typical_serving:
-                            abort = True
-            if abort:
-                break
+                        if servings[-1] != food.small_serving:
+                            servings_all_the_same = False
+                        servings.append(food.small_serving)
 
-        if not abort:
-            if parsed['serving'] == 's':
-                portion_name = 'piccola'
-            elif parsed['serving'] == 'm':
-                portion_name = 'media'
-            elif parsed['serving'] == 's':
-                portion_name = 'grande'
+                # Medium serving
+                if (parsed['serving'] == 'm' or parsed['serving'] is None) and food.medium_serving is not None:
+                    if not servings:
+                        servings.append(food.medium_serving)
+                    else:
+                        if servings[-1] != food.medium_serving:
+                            servings_all_the_same = False
+                        servings.append(food.medium_serving)
+
+                # Large serving
+                if parsed['serving'] == 'l' and food.large_serving is not None:
+                    if not servings:
+                        servings.append(food.large_serving)
+                    else:
+                        if servings[-1] != food.large_serving:
+                            servings_all_the_same = False
+                        servings.append(food.large_serving)
+
+            if servings:
+                if not servings_all_the_same:
+                    # Compute average
+                    serving = round(sum(servings)/len(servings))
+                else:
+                    serving = servings[0]
             else:
-                portion_name = 'tipica'
+                serving = None
 
+            if serving: # and servings_all_the_same
+                if parsed['serving'] == 's':
+                    portion_name = 'piccola'
+                elif parsed['serving'] == 'm':
+                    portion_name = 'media'
+                elif parsed['serving'] == 's':
+                    portion_name = 'grande'
+                elif parsed['serving'] is None:
+                    portion_name = 'tipica'
+
+                if cho_observations:
+                    if servings_all_the_same:
+                        reply += 'Una porzione {} è di {}g, per un totale di circa {}g di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
+                    else:
+                        reply += 'In media, una porzione {} è di {}g, per un totale di circa {}g di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
+
+        else:
+            # Compute the value for the given amount
             if cho_observations:
-                reply += 'Una porzione {} è di circa {}g, per un totale circa {}g di carboidrati'.format(portion_name, serving, round(serving*(cho/100)))
-            else:
-                reply += 'Una porzione {} è di circa {}g.'.format(portion_name)
+                reply += 'Per {}g, il totale di carboidrati è di circa {}g.'.format(parsed['amount'], round(parsed['amount']*(cho/100)))
 
         if parsed['amount']:
             pass
