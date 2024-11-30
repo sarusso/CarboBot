@@ -120,7 +120,7 @@ class Bot():
                     portion_name = 'piccola'
                 elif parsed['serving'] == 'm':
                     portion_name = 'media'
-                elif parsed['serving'] == 's':
+                elif parsed['serving'] == 'l':
                     portion_name = 'grande'
                 elif parsed['serving'] is None:
                     portion_name = 'tipica'
