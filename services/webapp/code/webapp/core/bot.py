@@ -50,7 +50,7 @@ class Bot():
 
         # Compose reply
         if len(foods) == 1:
-            reply =  'Ho trovato "{}". '.format(parsed['food'])
+            reply =  'Ho trovato "{}". '.format(foods[0].name)
         else:
             matching_foods_string = ''
             for food in foods:
