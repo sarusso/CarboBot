@@ -5,7 +5,7 @@ from .core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.entrypoint, name='root'),
+    path('', views.chat, name='root'), # views.entrypoint
     path('main/', views.main, name='main'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
