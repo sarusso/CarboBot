@@ -40,13 +40,13 @@ class Bot():
 
         # Compute averages
         if cho_observations:
-            cho = sum(cho_observations) / len(cho_observations)
+            cho = round(sum(cho_observations) / len(cho_observations))
         if protein_observations:
-            proteins = sum(protein_observations) / len(protein_observations)
+            proteins = round(sum(protein_observations) / len(protein_observations))
         if fiber_observations:
-            fibers = sum(fiber_observations) / len(fiber_observations)
+            fibers = round(sum(fiber_observations) / len(fiber_observations))
         if fat_observations:
-            fat = sum(fat_observations) / len(fat_observations)
+            fat = round(sum(fat_observations) / len(fat_observations))
 
         # Compose reply
         matching_foods_string = ''
@@ -69,6 +69,55 @@ class Bot():
         else:
             if cho_observations:
                 reply += 'Mediamente, {}g di carboidrati per 100g. '.format(cho)
+
+        # Also provide info on typical servings if they are all the same
+        # What serving to evaluate
+        serving = None
+        abort = False
+        for food in foods:
+
+            if parsed['serving'] == 's' and food.small_serving is not None:
+                if serving is None:
+                    serving = food.small_serving
+                else:
+                    if serving != food.small_serving:
+                        abort = True
+            elif parsed['serving'] == 'm' and food.medium_serving is not None:
+                if serving is None:
+                    serving = food.medium_serving
+                else:
+                    if serving != food.medium_serving:
+                        abort = True
+            elif parsed['serving'] == 'l' and food.large_serving is not None:
+                if serving is not None:
+                    serving = food.small_serving
+                else:
+                    if serving != food.small_serving:
+                        abort = True
+            else:
+                if food.typical_serving is not None:
+                    if serving is None:
+                        serving = food.typical_serving
+                    else:
+                        if serving != food.typical_serving:
+                            abort = True
+            if abort:
+                break
+
+        if not abort:
+            if parsed['serving'] == 's':
+                portion_name = 'piccola'
+            elif parsed['serving'] == 'm':
+                portion_name = 'media'
+            elif parsed['serving'] == 's':
+                portion_name = 'grande'
+            else:
+                portion_name = 'tipica'
+
+            if cho_observations:
+                reply += 'Una porzione {} è di circa {}g, per un totale circa {}g di carboidrati'.format(portion_name, serving, round(serving*(cho/100)))
+            else:
+                reply += 'Una porzione {} è di circa {}g.'.format(portion_name)
 
         if parsed['amount']:
             pass
