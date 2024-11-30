@@ -300,3 +300,8 @@ class TestMessageParser(TestCase):
         self.assertEqual(parsed['serving'], 'l')
         self.assertEqual(parsed['details'], False)
 
+        parsed = message_parser('pizza grande')
+        self.assertEqual(parsed['food'], 'pizza')
+        self.assertEqual(parsed['amount'], None)
+        self.assertEqual(parsed['serving'], 'l')
+        self.assertEqual(parsed['details'], False)

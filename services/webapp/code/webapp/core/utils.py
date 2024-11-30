@@ -123,21 +123,21 @@ def message_parser(message):
     large_serving_keywords = ['grande', 'grandi', 'tanta', 'tanto', 'tanti']
 
     for keyword in small_serving_keywords:
-        if message.startswith(keyword):
+        if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
             parsed['serving'] = 's'
             break
 
     for keyword in medium_serving_keywords:
-        if message.startswith(keyword):
+        if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
             parsed['serving'] = 'm'
             break
 
     for keyword in large_serving_keywords:
-        if message.startswith(keyword):
+        if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
             parsed['serving'] = 'l'
