@@ -8,6 +8,7 @@ from .models import Food, FoodObservation
 from .decorators import public_view, private_view
 from .exceptions import ErrorMessage
 from .bot import Bot
+import uuid
 
 # Setup logging
 import logging
@@ -166,6 +167,107 @@ def food_add(request):
         data['added_name'] = name
 
     return render(request, 'food_add.html', {'data': data})
+
+@private_view
+def food_load(request):
+    data = {}
+    if request.method == 'POST':
+
+        # Get file if any
+        fileinput = request.FILES.get('fileinput', None)
+        logger.info('Loaded fileinput="{}"'.format(fileinput))
+
+        if not fileinput:
+            raise ErrorMessage('No file provided?')
+
+        # Load file content
+        fild_uuid = str(uuid.uuid4())
+        file_content = None
+        if fileinput:
+            with open('/tmp/{}'.format(fild_uuid), 'wb+') as destination:
+                for chunk in fileinput.chunks():
+                    destination.write(chunk)
+            for chunk in fileinput.chunks():
+                if not file_content:
+                    file_content = chunk
+                else:
+                    file_content += chunk
+        #logger.debug(file_content)
+
+        import csv
+        with open('/tmp/{}'.format(fild_uuid), mode='r') as f:
+            reader = csv.DictReader(f)
+            csv_data = [row for row in reader]
+
+        for food in Food.objects.all():
+            food.delete()
+
+        for entry in csv_data:
+            if not entry['Nome descrittivo']:
+                continue
+            else:
+                name = entry['Nome descrittivo']
+            if not entry['Ingredienti principali']:
+                raise ErrorMessage('No main ingredents for "{}"?'.format(name))
+            else:
+                main_ingredients = [ingredient.strip() for ingredient in entry['Ingredienti principali'].split(',')]
+
+            typical_serving = None
+            small_serving = None
+            medium_serving = None
+            large_serving = None
+            cho_content = None
+            protein_content = None
+            fiber_content = None
+            fat_content = None
+
+            for key in entry.keys():
+                if 'tipica' in key.lower():
+                    if entry[key].strip():
+                        typical_serving = int(entry[key])
+                if 'piccola' in key.lower():
+                    if entry[key].strip():
+                        small_serving = int(entry[key])
+                if 'media' in key.lower():
+                    if entry[key].strip():
+                        medium_serving = int(entry[key])
+                if 'grande' in key.lower():
+                    if entry[key].strip():
+                        large_serving = int(entry[key])
+                if 'cho' in key.lower():
+                    if entry[key].strip():
+                        cho_content = float(entry[key])
+                if 'protein' in key.lower():
+                    if entry[key].strip():
+                        protein_content = float(entry[key])
+                if 'fibre' in key.lower():
+                    if entry[key].strip():
+                        fiber_content = float(entry[key])
+                if 'proteine' in key.lower():
+                    if entry[key].strip():
+                        fat_content = float(entry[key])
+
+            if not cho_content and not protein_content and not fiber_content and not fat_content:
+                raise ErrorMessage('No nutritional values for "{}"?'.format(name))
+
+            food = Food.objects.create(created_by = request.user,
+                                       name = name,
+                                       main_ingredients = main_ingredients,
+                                       typical_serving = typical_serving,
+                                       small_serving = small_serving,
+                                       medium_serving = medium_serving,
+                                       large_serving = large_serving)
+
+            FoodObservation.objects.create(created_by = request.user,
+                                           food = food,
+                                           cho_ratio = cho_content/100 if cho_content is not None else None,
+                                           protein_ratio = protein_content/100 if protein_content  is not None else None,
+                                           fiber_ratio = fiber_content/100 if fiber_content  is not None else None,
+                                           fat_ratio = fat_content/100 if fat_content is not None else None)
+        data['loaded'] = True
+        logger.info('Deleted all content and loaded database')
+
+    return render(request, 'food_load.html', {'data': data})
 
 @private_view
 def food_observations(request):

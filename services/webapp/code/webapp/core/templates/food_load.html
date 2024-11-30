@@ -1,0 +1,45 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/food/">Alimenti</a> <font style="font-size:0.7em">&gt; carica </font>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body" style="min-height:300px">
+                                <div style="text-align: center">
+                                {% if data.loaded %}
+                                <div class="alert alert-success" role="alert">
+                                    <i class="fa fa-check-square mr-0.5" aria-hidden="true"></i> Ok, file di database caricato.
+                                </div>
+                                {% else %}
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fa fa-exclamation-triangle mr-0.5" aria-hidden="true"></i> Caricare un nuovo file di database rimpiazzerà quello attuale!
+								</div>
+                                    <form action="" method="POST"enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div style="margin: 0 auto; display:inline-block">
+                                        <input type="file" name="fileinput" id="fileinput"/>
+                                        <input type="submit" value="Carica">
+                                        </div>
+                                    </form>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Simple page area end -->
+
+{% include "footer.html" %}
