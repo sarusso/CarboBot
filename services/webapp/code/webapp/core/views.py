@@ -346,10 +346,7 @@ def chat(request):
         conversation_id = request.POST.get('conversation_id', None)
 
         # Load previous messages
-        if conversation_id in conversations_cache:
-            previous_messages = conversations_cache[conversation_id]
-            pass
-        else:
+        if conversation_id not in conversations_cache:
             conversations_cache[conversation_id] = []
 
         # Get the message
