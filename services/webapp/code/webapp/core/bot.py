@@ -71,7 +71,7 @@ class Bot():
             reply += 'per 100g. '
         else:
             if cho_observations:
-                reply += 'Mediamente, {}g di carboidrati per 100g. '.format(cho)
+                reply += 'Mediamente, *{}g/* di carboidrati per *100g/*. '.format(cho)
 
         # Handle serving if no amount given
         if not parsed['amount']:
@@ -127,14 +127,14 @@ class Bot():
 
                 if cho_observations:
                     if servings_all_the_same:
-                        reply += 'Una porzione {} è di {}g, per un totale di circa {}g di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
+                        reply += 'Una porzione {} è di circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
                     else:
-                        reply += 'In media, una porzione {} è di {}g, per un totale di circa {}g di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
+                        reply += 'In media, una porzione {} è di circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(portion_name, serving, round(serving*(cho/100)))
 
         else:
             # Compute the value for the given amount
             if cho_observations:
-                reply += 'Per {}g, il totale di carboidrati è di circa {}g.'.format(parsed['amount'], round(parsed['amount']*(cho/100)))
+                reply += 'Per *{}g/*, il totale di carboidrati è di circa *{}g/*.'.format(parsed['amount'], round(parsed['amount']*(cho/100)))
 
         if parsed['amount']:
             pass

@@ -359,7 +359,13 @@ def chat(request):
 
         # Ask the bot to answer
         bot = Bot()
-        reply= bot.answer(message)
+        reply = bot.answer(message)
+
+        # Safety measure to prevent HTML tags injection
+        reply = reply.replace('<', '').replace('>','')
+
+        # Render bold
+        reply = reply.replace('/*', '</b>').replace('*','<b>')
 
         # Add the original message and the reply in the conversation data data
         conversations_cache[conversation_id].append({'message':message, 'reply':reply})

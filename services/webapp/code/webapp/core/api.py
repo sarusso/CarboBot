@@ -77,6 +77,9 @@ class TelegramAPI(APIView):
         else:
             bot = Bot()
             reply = bot.answer(message)
+            # Render bold
+            reply = reply.replace('/*', '*')
+
         logger.debug('Reply: "%s"', reply)
 
         telegram_client.send_message(telegram_chat_id, reply)
