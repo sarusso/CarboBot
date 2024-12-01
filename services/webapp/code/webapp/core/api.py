@@ -68,21 +68,25 @@ class TelegramAPI(APIView):
         #     ]
         #   }
         # }
-
-        telegram_chat_id = request.data['message']['chat']['id']
-        message = request.data['message']['text'].strip()
-        logger.debug('Received message: "%s"', message)
-        if message == '/start':
-            reply = 'Benvenuto su CarboBot!'
+        try:
+            telegram_chat_id = request.data['message']['chat']['id']
+        except:
+            logger.error('Got empty chat id from Telegram')
+            return ok200()
         else:
-            bot = Bot()
-            reply = bot.answer(message)
-            # Render bold
-            reply = reply.replace('/*', '*')
+            message = request.data['message']['text'].strip()
+            logger.debug('Received message: "%s"', message)
+            if message == '/start':
+                reply = 'Benvenuto su CarboBot!'
+            else:
+                bot = Bot()
+                reply = bot.answer(message)
+                # Render bold
+                reply = reply.replace('/*', '*')
 
-        logger.debug('Reply: "%s"', reply)
+            logger.debug('Reply: "%s"', reply)
 
-        telegram_client.send_message(telegram_chat_id, reply)
+            telegram_client.send_message(telegram_chat_id, reply)
 
-        return ok200('OK')
+            return ok200()
 
