@@ -366,8 +366,12 @@ def chat(request):
         # Safety measure to prevent HTML tags injection
         reply = reply.replace('<', '').replace('>','')
 
-        # Render bold
+        # Render newline in HTML
+        reply = reply.replace('\n', '<br/>')
+
+        # Render bold  in HTML
         reply = reply.replace('/*', '</b>').replace('*','<b>')
+
 
         # Add the original message and the reply in the conversation data data
         conversations_cache[conversation_id].append({'message':message, 'reply':reply})

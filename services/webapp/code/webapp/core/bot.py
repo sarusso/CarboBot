@@ -54,9 +54,9 @@ class Bot():
         else:
             matching_foods_string = ''
             for food in foods:
-                matching_foods_string += '{}, '.format(food.name)
+                matching_foods_string += '\n• {}; '.format(food.name)
             matching_foods_string = matching_foods_string[0:-2]
-            reply =  'Per "{}" ho trovato: "{}". '.format(parsed['food'], matching_foods_string)
+            reply =  'Per "{}" ho trovato: {}.\n'.format(parsed['food'], matching_foods_string)
 
         if parsed['details']:
             reply += 'Valori nutrizionali medi: '
