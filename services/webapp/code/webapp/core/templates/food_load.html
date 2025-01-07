@@ -20,9 +20,20 @@
                             <div class="card-body" style="min-height:300px">
                                 <div style="text-align: center">
                                 {% if data.loaded %}
+                                {% if not data.loaded %}
                                 <div class="alert alert-success" role="alert">
                                     <i class="fa fa-check-square mr-0.5" aria-hidden="true"></i> Ok, file di database caricato.
                                 </div>
+                                {% else %}
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fa fa-exclamation-triangle mr-0.5" aria-hidden="true"></i> File di database caricato, ma con degli errori.
+                                </div>
+                                <ul>
+                                    {% for line, error in data.errors.items %}
+                                    <li><b>Linea #{{ line }}</b>: {{ error }}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
                                 {% else %}
                                 <div class="alert alert-warning" role="alert">
                                     <i class="fa fa-exclamation-triangle mr-0.5" aria-hidden="true"></i> Caricare un nuovo file di database rimpiazzerà quello attuale!

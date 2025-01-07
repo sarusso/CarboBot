@@ -174,6 +174,8 @@ def food_load(request):
     data = {}
     if request.method == 'POST':
 
+        errors = {}
+
         # Get file if any
         fileinput = request.FILES.get('fileinput', None)
         logger.info('Loaded fileinput="{}"'.format(fileinput))
@@ -203,13 +205,14 @@ def food_load(request):
         for food in Food.objects.all():
             food.delete()
 
-        for entry in csv_data:
+        for i, entry in enumerate(csv_data):
             if not entry['Nome descrittivo']:
                 continue
             else:
-                name = entry['Nome descrittivo']
+                name = entry['Nome descrittivo'].strip()
             if not entry['Ingredienti principali']:
-                raise ErrorMessage('No main ingredents for "{}"?'.format(name))
+                errors[i+1] = 'Nessun ingrediente principale per "{}"?'.format(name)
+                continue
             else:
                 main_ingredients = [ingredient.strip() for ingredient in entry['Ingredienti principali'].split(',')]
 
@@ -249,7 +252,8 @@ def food_load(request):
                         fat_content = float(entry[key])
 
             if not cho_content and not protein_content and not fiber_content and not fat_content:
-                raise ErrorMessage('No nutritional values for "{}"?'.format(name))
+                errors[i+1] = 'Nessun valore nutrizionale per "{}"?'.format(name)
+                continue
 
             food = Food.objects.create(created_by = request.user,
                                        name = name,
@@ -265,6 +269,7 @@ def food_load(request):
                                            protein_ratio = protein_content/100 if protein_content  is not None else None,
                                            fiber_ratio = fiber_content/100 if fiber_content  is not None else None,
                                            fat_ratio = fat_content/100 if fat_content is not None else None)
+        data['errors'] = errors
         data['loaded'] = True
         logger.info('Deleted all content and loaded database')
 
