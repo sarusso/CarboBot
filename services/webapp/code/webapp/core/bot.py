@@ -1,5 +1,6 @@
 from .models import Food
 from .utils import message_parser
+from . import emoji
 
 # Setup logging
 import logging
@@ -41,6 +42,7 @@ class Bot():
         # Compute averages
         if cho_observations:
             cho = round(sum(cho_observations) / len(cho_observations))
+            cho_variation = 1 - (min(cho_observations)/max(cho_observations))
         if protein_observations:
             proteins = round(sum(protein_observations) / len(protein_observations))
         if fiber_observations:
@@ -57,6 +59,9 @@ class Bot():
                 matching_foods_string += '\n• {}; '.format(food.name)
             matching_foods_string = matching_foods_string[0:-2]
             reply =  'Per "{}" ho trovato: {}.\n'.format(parsed['food'], matching_foods_string)
+
+        if cho_variation > 0.15:
+            reply += '️{} Varibilità fra i risultati! (~{}%).\n'.format(emoji.warning, int(cho_variation*100))
 
         if parsed['details']:
             reply += 'Valori nutrizionali medi: '
