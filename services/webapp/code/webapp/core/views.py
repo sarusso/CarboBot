@@ -211,7 +211,7 @@ def food_load(request):
             else:
                 name = entry['Nome descrittivo'].strip()
             if not entry['Ingredienti principali']:
-                errors[i+1] = 'Nessun ingrediente principale per "{}"?'.format(name)
+                errors[i+2] = 'Nessun ingrediente principale per "{}"?'.format(name)
                 continue
             else:
                 main_ingredients = [ingredient.strip() for ingredient in entry['Ingredienti principali'].split(',')]
@@ -252,7 +252,7 @@ def food_load(request):
                         fat_content = float(entry[key])
 
             if not cho_content and not protein_content and not fiber_content and not fat_content:
-                errors[i+1] = 'Nessun valore nutrizionale per "{}"?'.format(name)
+                errors[i+2] = 'Nessun valore nutrizionale per "{}"?'.format(name)
                 continue
 
             food = Food.objects.create(created_by = request.user,
