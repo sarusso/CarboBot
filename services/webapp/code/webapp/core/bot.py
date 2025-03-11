@@ -15,7 +15,7 @@ class Bot():
         parse_food = parsed['food']
         parsed_amount = parsed['amount']
         parsed_pieces = parsed['pieces']     # None, 1, 2,..., 10
-        parsed_size = parsed['serving']   # s, m, l
+        parsed_size = parsed['size']         # s, m, l
         parsed_details = parsed['details']
 
         # Set variant

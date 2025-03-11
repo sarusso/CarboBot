@@ -103,7 +103,7 @@ def message_parser(message):
     parsed['food'] = None
     parsed['amount'] = None
     parsed['pieces'] = None
-    parsed['serving'] = None
+    parsed['size'] = None
     parsed['details'] = False
 
     message = message.lower().strip()
@@ -180,30 +180,30 @@ def message_parser(message):
         else:
             message = ' '.join(message_elements[2:])
 
-    # Parse serving
-    small_serving_keywords = ['piccola', 'piccolo', 'piccoli', 'piccole', 'poco', 'poca', 'pochi']
-    medium_serving_keywords = ['media', 'medio', 'medi', 'medie']
-    large_serving_keywords = ['grande', 'grandi', 'tanta', 'tanto', 'tanti']
+    # Parse size
+    small_size_keywords = ['piccola', 'piccolo', 'piccoli', 'piccole', 'poco', 'poca', 'pochi']
+    medium_size_keywords = ['media', 'medio', 'medi', 'medie']
+    large_size_keywords = ['grande', 'grandi', 'tanta', 'tanto', 'tanti']
 
-    for keyword in small_serving_keywords:
+    for keyword in small_size_keywords:
         if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
-            parsed['serving'] = 's'
+            parsed['size'] = 's'
             break
 
-    for keyword in medium_serving_keywords:
+    for keyword in medium_size_keywords:
         if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
-            parsed['serving'] = 'm'
+            parsed['size'] = 'm'
             break
 
-    for keyword in large_serving_keywords:
+    for keyword in large_size_keywords:
         if message.startswith(keyword) or message.endswith(keyword):
             message = message.replace(keyword, '')
             message = message.strip()
-            parsed['serving'] = 'l'
+            parsed['size'] = 'l'
             break
 
     # Set food now
