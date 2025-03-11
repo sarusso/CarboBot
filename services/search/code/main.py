@@ -4,7 +4,7 @@ from pydantic import BaseModel, validator
 from uuid import UUID
 from typing import List, Optional
 from enum import Enum
-from .elastic import es
+from .elastic import es, NotFoundError
 
 # Conf
 MIN_SCORE = float(os.environ.get('MIN_SCORE', 0.5))
@@ -32,7 +32,7 @@ class CommandEnum(str, Enum):
 
 class Command(BaseModel):
     command: CommandEnum
-    index_name: str = None
+    index_name: str
     confirmation_code: str = None
 
 
@@ -40,7 +40,7 @@ class Item(BaseModel):
     uuid: UUID
     description: str
     ingredients: List[str]
-    index_name: Optional[str] = None
+    index_name: str
 
     @validator("ingredients")
     def check_ingredients_length(cls, v):
@@ -110,6 +110,11 @@ async def delete_item(item: Item):
         item_dict["uuid"] = str(item_dict["uuid"])
         index_name = item_dict.get('index_name', None)
         response = es.delete_item(uuid=item_dict["uuid"], index_name=index_name)
+    except NotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -133,6 +138,10 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     # Filter hits
     # ------------------
     # TODO:  maybe use k-means with _score and 1 ingredient as an enum
+
+    # This is when there is no index at all
+    if not elastic_response:
+        return []
 
     # Shortcut
     hits = elastic_response["hits"]["hits"]
