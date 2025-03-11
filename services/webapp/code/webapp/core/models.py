@@ -24,6 +24,7 @@ class Food(models.Model):
     small_piece = models.IntegerField('Small piece', blank=True, null=True)
     medium_piece = models.IntegerField('Medium piece', blank=True, null=True)
     large_piece = models.IntegerField('Large piece', blank=True, null=True)
+    liquid = models.BooleanField('Food is a liquid', default=False)
 
     def __str__(self):
         return str('Food "{}"'.format(self.name))

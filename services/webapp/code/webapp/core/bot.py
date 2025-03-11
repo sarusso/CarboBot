@@ -71,6 +71,17 @@ class Bot():
             matching_foods_string = matching_foods_string[0:-2]
             reply =  'Per "{}" ho trovato: {}.\n'.format(message, matching_foods_string)
 
+        # Set unit
+        units = []
+        for food in foods:
+            if food.liquid:
+                if 'ml' not in units:
+                    units.append('ml')
+            else:
+                if 'g' not in units:
+                    units.append('g')
+        unit = '/'.join(units)
+
         if cho_variation > 0.15:
             reply += '️{} Varibilità fra i risultati! (~{}%).\n'.format(emoji.warning, int(cho_variation*100))
 
@@ -84,10 +95,10 @@ class Bot():
                 reply += '{}g di fibre e '.format(fibers)
             if fat_observations:
                 reply += '{}g di grassi '.format(fat)
-            reply += 'per 100g. '
+            reply += 'per 100{}. '.format(unit)
         else:
             if cho_observations:
-                reply += 'Mediamente, *{}g/* di carboidrati per *100g/*. '.format(cho)
+                reply += 'Mediamente, *{}g/* di carboidrati per *100{}/*. '.format(cho, unit)
 
 
         #-------------------------------
@@ -96,7 +107,10 @@ class Bot():
         if parsed_amount:
             # Compute the value for the given amount
             if cho_observations:
-                reply += 'Per *{}g/*, il totale di carboidrati è di circa *{}g/*.'.format(parsed['amount'], round(parsed['amount']*(cho/100)))
+                reply += 'Per *{}{}/*, il totale di carboidrati è di circa *{}{}/*.'.format(parsed['amount'],
+                                                                                           unit,
+                                                                                           round(parsed['amount']*(cho/100)),
+                                                                                           unit)
 
         #-------------------------------
         # Were we given a serving size?
@@ -154,13 +168,15 @@ class Bot():
 
                 if cho_observations:
                     if servings_all_the_same:
-                        reply += 'Una porzione {} è di circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
-                                                                                                                           serving_amount,
-                                                                                                                           round(serving_amount*(cho/100)))
+                        reply += 'Una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
+                                                                                                                            serving_amount,
+                                                                                                                            unit,
+                                                                                                                            round(serving_amount*(cho/100)))
                     else:
-                        reply += 'In media, una porzione {} è di circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
-                                                                                                                                     serving_amount,
-                                                                                                                                     round(serving_amount*(cho/100)))
+                        reply += 'In media, una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
+                                                                                                                                      serving_amount,
+                                                                                                                                      unit,
+                                                                                                                                      round(serving_amount*(cho/100)))
 
 
         #-------------------------------
@@ -221,17 +237,19 @@ class Bot():
 
                 if cho_observations:
                     if pieces_all_the_same:
-                        reply += '{} pezz{} {} sono circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
-                                                                                                                        postfix,
-                                                                                                                        size_name,
-                                                                                                                        piece_amount*parsed_pieces,
-                                                                                                                        round(piece_amount*parsed_pieces*(cho/100)))
+                        reply += '{} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
+                                                                                                                         postfix,
+                                                                                                                         size_name,
+                                                                                                                         piece_amount*parsed_pieces,
+                                                                                                                         unit,
+                                                                                                                         round(piece_amount*parsed_pieces*(cho/100)))
                     else:
-                        reply += 'In media, {} pezz{} {} sono circa *{}g/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
-                                                                                                                                  postfix,
-                                                                                                                                  size_name,
-                                                                                                                                  piece_amount*parsed_pieces,
-                                                                                                                                  round(piece_amount*parsed_pieces*(cho/100)))
+                        reply += 'In media, {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
+                                                                                                                                   postfix,
+                                                                                                                                   size_name,
+                                                                                                                                   piece_amount*parsed_pieces,
+                                                                                                                                   unit,
+                                                                                                                                   round(piece_amount*parsed_pieces*(cho/100)))
 
 
         #-------------------------------

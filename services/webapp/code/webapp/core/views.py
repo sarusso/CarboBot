@@ -226,6 +226,8 @@ def food_load(request):
             fiber_content = None
             fat_content = None
 
+            liquid = False
+
             for key in entry.keys():
 
                 # Servings
@@ -266,6 +268,11 @@ def food_load(request):
                     if entry[key].strip():
                         fat_content = float(entry[key])
 
+                # Liquid
+                if 'tipo' in key.lower():
+                    if entry[key].strip() == 'bevanda':
+                        liquid = True
+
             if not cho_content and not protein_content and not fiber_content and not fat_content:
                 errors[i+2] = 'Nessun valore nutrizionale per "{}"?'.format(name)
                 continue
@@ -278,7 +285,8 @@ def food_load(request):
                                        large_serving = large_serving,
                                        small_piece = small_piece,
                                        medium_piece = medium_piece,
-                                       large_piece = large_piece)
+                                       large_piece = large_piece,
+                                       liquid = liquid)
 
             FoodObservation.objects.create(created_by = request.user,
                                            food = food,
