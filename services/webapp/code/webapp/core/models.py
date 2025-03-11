@@ -18,7 +18,6 @@ class Food(models.Model):
     created_by = models.ForeignKey(User, related_name='foods', null=True, blank=True, on_delete=SET_NULL)
     name = models.CharField('Name', max_length=128, blank=False, null=False)
     main_ingredients = JSONField('Main ingredients', blank=False, null=False)
-    typical_serving = models.IntegerField('Typical serving', blank=True, null=True)
     small_serving = models.IntegerField('Small serving', blank=True, null=True)
     medium_serving = models.IntegerField('Medium serving', blank=True, null=True)
     large_serving = models.IntegerField('Large serving', blank=True, null=True)

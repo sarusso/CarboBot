@@ -125,7 +125,6 @@ def food_add(request):
     if request.method == 'POST':
         name = request.POST.get('name', None)
         main_ingredients = request.POST.get('main_ingredients', None)
-        typical_serving = request.POST.get('typical_serving', None)
         small_serving = request.POST.get('small_serving', None)
         medium_serving = request.POST.get('medium_serving', None)
         large_serving = request.POST.get('large_serving', None)
@@ -147,7 +146,6 @@ def food_add(request):
             return parameter
 
         # Make parameters int
-        typical_serving = make_int(typical_serving, 'typical_serving')
         small_serving = make_int(small_serving, 'small_serving')
         medium_serving = make_int(medium_serving, 'medium_serving')
         large_serving = make_int(large_serving, 'large_serving')
@@ -160,7 +158,6 @@ def food_add(request):
         Food.objects.create(created_by = request.user,
                             name = name,
                             main_ingredients = main_ingredients,
-                            typical_serving = typical_serving,
                             small_serving = small_serving,
                             medium_serving = medium_serving,
                             large_serving = large_serving)
@@ -216,7 +213,6 @@ def food_load(request):
             else:
                 main_ingredients = [ingredient.strip() for ingredient in entry['Ingredienti principali'].split(',')]
 
-            typical_serving = None
             small_serving = None
             medium_serving = None
             large_serving = None
@@ -231,9 +227,6 @@ def food_load(request):
             fat_content = None
 
             for key in entry.keys():
-                if 'tipica' in key.lower():
-                    if entry[key].strip():
-                        typical_serving = int(float(entry[key]))
 
                 # Servings
                 if 'porzione' in key.lower():
@@ -280,7 +273,6 @@ def food_load(request):
             food = Food.objects.create(created_by = request.user,
                                        name = name,
                                        main_ingredients = main_ingredients,
-                                       typical_serving = typical_serving,
                                        small_serving = small_serving,
                                        medium_serving = medium_serving,
                                        large_serving = large_serving,
