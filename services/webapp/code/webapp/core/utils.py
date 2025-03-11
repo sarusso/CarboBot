@@ -44,37 +44,51 @@ def format_exception(e):
         return str('Got exception "{}" of type "{}" with traceback "{}"'.format(e.__class__.__name__, type(e), traceback.format_exc().replace('\n', '|')))
 
 
+def get_index_name(prefix=None, variant=None):
+    name = 'food'
+    if prefix:
+        name = '{}{}'.format(prefix, name)
+    if variant:
+        name = '{}_{}'.format(name, variant)
+    return name
+
+
 class SearchService():
 
-    def __init__(self, host='search', index=None):
+    def __init__(self, host='search', index_prefix=None):
         self.host = host
-        self.index = index
+        self.index_prefix = index_prefix
 
-    def add(self, item):
-        if self.index is not None:
-            item['index_name'] = self.index
-            logger.debug('Using index "%s"', self.index)
+    def add(self, item, variant=None):
+
+        index_name = get_index_name(self.index_prefix, variant)
+        item['index_name'] = index_name # TODO: this is hack-ish
+        logger.debug('Adding using index "%s"', index_name)
+
         url = 'http://{}/api/v1/add/'.format(self.host)
         response = requests.post(url, json=item)
         if not response.status_code == 200:
             raise Exception(response.content)
 
-    def delete(self, item):
-        if self.index is not None:
-            item['index_name'] = self.index
-            logger.debug('Using index "%s"', self.index)
+    def delete(self, item, variant=None):
+
+        index_name = get_index_name(self.index_prefix, variant)
+        item['index_name'] = index_name # TODO: this is hack-ish
+        logger.debug('Deleting using index "%s"', index_name)
+
         url = 'http://{}/api/v1/delete/'.format(self.host)
         response = requests.post(url, json=item)
-        if not response.status_code == 200:
+        if response.status_code not in [200, 404]:
             raise Exception(response.content)
 
-    def query(self, q, min_score=0.1, max_diff=0.3):
+    def query(self, q, variant=None, min_score=0.1, max_diff=0.3):
+
         q = q.replace(' ', '%20') # TODO: make it all url-safe
-        if self.index is not None:
-            logger.debug('Using index "%s"', self.index)
-            url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q, self.index, min_score, max_diff)
-        else:
-            url = 'http://{}/api/v1/search?q={}&min_score={}&max_diff={}'.format(self.host, q, min_score, max_diff)
+
+        index_name = get_index_name(self.index_prefix, variant)
+        logger.debug('Querying using index "%s"', index_name)
+
+        url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q, index_name, min_score, max_diff)
         response = requests.get(url)
         if not response.status_code == 200:
             raise Exception(response.content)
@@ -88,6 +102,7 @@ def message_parser(message):
     parsed = {}
     parsed['food'] = None
     parsed['amount'] = None
+    parsed['pieces'] = None
     parsed['serving'] = None
     parsed['details'] = False
 
@@ -103,23 +118,71 @@ def message_parser(message):
         message = message.replace('dettagli', '')
         message = message.strip()
 
-    # Parse amount
+    # Remove special chars and double white spaces
+    message = message.replace('\'', ' ')
+    message = message.replace('  ', ' ')
+    message = message.replace('  ', ' ')
+
+    # Split message in elements
     message_elements = message.split(' ')
+
+    # Strip each element
+    message_elements = [message_element.strip() for message_element in message_elements]
+
+    # Parse pieces
+    if not (message_elements[0].endswith('g') or (len(message_elements) > 1 and message_elements[1] == 'g')):
+        piece_candidate = message_elements[0]
+        piece_candidate = piece_candidate.lower()
+        piece_candidate = piece_candidate.strip()
+
+        if piece_candidate.isdigit():
+            parsed['pieces'] = int(piece_candidate)
+        else:
+            if piece_candidate in ['un', 'uno', 'una']:
+                parsed['pieces'] = 1
+            if piece_candidate in ['due']:
+                parsed['pieces'] = 2
+            if piece_candidate in ['tre']:
+                parsed['pieces'] = 3
+            if piece_candidate in ['quattro']:
+                parsed['pieces'] = 4
+            if piece_candidate in ['cinque']:
+                parsed['pieces'] = 5
+            if piece_candidate in ['sei']:
+                parsed['pieces'] = 6
+            if piece_candidate in ['sette']:
+                parsed['pieces'] = 7
+            if piece_candidate in ['otto']:
+                parsed['pieces'] = 8
+            if piece_candidate in ['nove']:
+                parsed['pieces'] = 9
+            if piece_candidate in ['dieci']:
+                parsed['pieces'] = 10
+
+        if parsed['pieces'] :
+            message = message.replace(message_elements[0], '').strip()
+
+    # Parse amount or pieces
     if message_elements[0].endswith('g'):
         message_elements[0] = message_elements[0][0:-1]
-    try:
-        parsed['amount'] = int(message_elements[0])
-    except:
-        pass
-    else:
-        if message_elements[1] == 'g':
-            message = ' '.join(message_elements[2:])
+        try:
+            parsed['amount'] = int(message_elements[0])
+        except:
+            pass
         else:
             message = ' '.join(message_elements[1:])
 
+    if len(message_elements) > 1 and message_elements[1] == 'g':
+        try:
+            parsed['amount'] = int(message_elements[0])
+        except:
+            pass
+        else:
+            message = ' '.join(message_elements[2:])
+
     # Parse serving
-    small_serving_keywords = ['piccola', 'piccolo', 'piccoli', 'poco', 'poca', 'pochi']
-    medium_serving_keywords = ['media', 'medio', 'medi']
+    small_serving_keywords = ['piccola', 'piccolo', 'piccoli', 'piccole', 'poco', 'poca', 'pochi']
+    medium_serving_keywords = ['media', 'medio', 'medi', 'medie']
     large_serving_keywords = ['grande', 'grandi', 'tanta', 'tanto', 'tanti']
 
     for keyword in small_serving_keywords:

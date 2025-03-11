@@ -22,6 +22,9 @@ class Food(models.Model):
     small_serving = models.IntegerField('Small serving', blank=True, null=True)
     medium_serving = models.IntegerField('Medium serving', blank=True, null=True)
     large_serving = models.IntegerField('Large serving', blank=True, null=True)
+    small_piece = models.IntegerField('Small piece', blank=True, null=True)
+    medium_piece = models.IntegerField('Medium piece', blank=True, null=True)
+    large_piece = models.IntegerField('Large piece', blank=True, null=True)
 
     def __str__(self):
         return str('Food "{}"'.format(self.name))
@@ -38,7 +41,13 @@ class Food(models.Model):
                     "description": self.name,
                     "ingredients": self.main_ingredients}
 
-            search_service.add(item)
+            search_service.add(item, variant=None)
+
+            if self.small_serving or self.medium_serving or self.large_serving:
+                search_service.add(item, variant='servings')
+
+            if self.small_piece or self.medium_piece or self.large_piece:
+                search_service.add(item, variant='pieces')
 
         else:
             raise Exception('Cannot edit food yet. Delete and re-create if you need to.')
@@ -50,6 +59,11 @@ class Food(models.Model):
             search_service = SearchService()
         item = {'uuid':self.uuid, 'description': self.name, 'ingredients': self.main_ingredients}
         search_service.delete(item)
+
+        # Remove variants as well (if none present no harm is done)
+        search_service.delete(item, variant='servings')
+        search_service.delete(item, variant='pieces')
+
         super(Food, self).delete(*args, **kwargs)
 
     @property
@@ -57,12 +71,15 @@ class Food(models.Model):
         return self.observations.count()
 
     @classmethod
-    def query(cls, q, search_service=None):
+    def query(cls, q, variant=None, search_service=None):
         if not search_service:
             search_service = SearchService()
         food_objects = []
-        for entry in search_service.query(q):
-            food_objects.append(Food.objects.get(uuid=entry['_id']))
+        for entry in search_service.query(q, variant):
+            try:
+                food_objects.append(Food.objects.get(uuid=entry['_id']))
+            except Exception as e:
+                logger.error('{} @ {}'.format(e,entry))
         return food_objects
 
 

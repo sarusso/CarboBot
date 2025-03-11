@@ -220,6 +220,11 @@ def food_load(request):
             small_serving = None
             medium_serving = None
             large_serving = None
+
+            small_piece = None
+            medium_piece = None
+            large_piece = None
+
             cho_content = None
             protein_content = None
             fiber_content = None
@@ -228,16 +233,33 @@ def food_load(request):
             for key in entry.keys():
                 if 'tipica' in key.lower():
                     if entry[key].strip():
-                        typical_serving = int(entry[key])
-                if 'piccola' in key.lower():
-                    if entry[key].strip():
-                        small_serving = int(entry[key])
-                if 'media' in key.lower():
-                    if entry[key].strip():
-                        medium_serving = int(entry[key])
-                if 'grande' in key.lower():
-                    if entry[key].strip():
-                        large_serving = int(entry[key])
+                        typical_serving = int(float(entry[key]))
+
+                # Servings
+                if 'porzione' in key.lower():
+                    if 'piccola' in key.lower():
+                        if entry[key].strip():
+                            small_serving = int(float(entry[key]))
+                    if 'media' in key.lower():
+                        if entry[key].strip():
+                            medium_serving = int(float(entry[key]))
+                    if 'grande' in key.lower():
+                        if entry[key].strip():
+                            large_serving = int(float(entry[key]))
+
+                # Pieces
+                if 'pezzo' in key.lower():
+                    if 'piccolo' in key.lower():
+                        if entry[key].strip():
+                            small_piece = int(float(entry[key]))
+                    if 'medio' in key.lower():
+                        if entry[key].strip():
+                            medium_piece = int(float(entry[key]))
+                    if 'grande' in key.lower():
+                        if entry[key].strip():
+                            large_piece = int(float(entry[key]))
+
+                # Values
                 if 'cho' in key.lower():
                     if entry[key].strip():
                         cho_content = float(entry[key])
@@ -261,7 +283,10 @@ def food_load(request):
                                        typical_serving = typical_serving,
                                        small_serving = small_serving,
                                        medium_serving = medium_serving,
-                                       large_serving = large_serving)
+                                       large_serving = large_serving,
+                                       small_piece = small_piece,
+                                       medium_piece = medium_piece,
+                                       large_piece = large_piece)
 
             FoodObservation.objects.create(created_by = request.user,
                                            food = food,
