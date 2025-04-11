@@ -105,6 +105,7 @@ def message_parser(message):
     parsed['pieces'] = None
     parsed['size'] = None
     parsed['details'] = False
+    parsed['serving'] = None
 
     message = message.lower().strip()
 
@@ -123,14 +124,48 @@ def message_parser(message):
     message = message.replace('  ', ' ')
     message = message.replace('  ', ' ')
 
+    # Standardize a few things (or maybe warn about common errors?)
+    for size_keyword in ['piccolo', 'piccola', 'piccoli', 'poco', 'poca', 'pochi'
+                         'medio', 'media', 'medi', 'media',
+                         'grande', 'grandi', 'tanto', 'tanta', 'tanti']:
+        if ' {} '.format(size_keyword) in message:
+            message = message.replace(' {} '.format(size_keyword), ' ')
+            message = message + ' {}'.format(size_keyword)
+            break
+
     # Split message in elements
     message_elements = message.split(' ')
 
     # Strip each element
     message_elements = [message_element.strip() for message_element in message_elements]
 
+    # Parse serving
+    if len(message_elements) >=3 \
+    and not (message_elements[0].endswith('g') or (len(message_elements) >= 1 and message_elements[1] == 'g')) \
+    and not (message_elements[0].endswith('ml') or (len(message_elements) >= 1 and message_elements[1] == 'ml')):
+
+        serving_candidate = message_elements[0] + ' ' + message_elements[1]
+        serving_candidate = serving_candidate.lower()
+        serving_candidate = serving_candidate.strip()
+        if serving_candidate in ['porzione di', 'pacchetto di', 'confezione di', 'bicchiere di']:
+            parsed['serving'] = 1
+            message = message.replace(serving_candidate, '').strip()
+
+        serving_candidate = message_elements[0] + ' ' + message_elements[1] + ' ' + message_elements[2]
+        serving_candidate = serving_candidate.lower()
+        serving_candidate = serving_candidate.strip()
+        if serving_candidate in ['una porzione di', 'un pacchetto di', 'una confezione di', 'un bicchiere di']:
+            parsed['serving'] = 1
+            message = message.replace(serving_candidate, '').strip()
+
+    # Re-split if a serving was found
+    if parsed['serving']:
+        message_elements = message.split(' ')
+
     # Parse pieces
-    if not (message_elements[0].endswith('g') or (len(message_elements) > 1 and message_elements[1] == 'g')):
+    if len(message_elements) >=2 \
+    and not (message_elements[0].endswith('g') or (len(message_elements) > 1 and message_elements[1] == 'g')) \
+    and not (message_elements[0].endswith('ml') or (len(message_elements) > 1 and message_elements[1] == 'ml')):
         piece_candidate = message_elements[0]
         piece_candidate = piece_candidate.lower()
         piece_candidate = piece_candidate.strip()
@@ -162,7 +197,16 @@ def message_parser(message):
         if parsed['pieces'] :
             message = message.replace(message_elements[0], '').strip()
 
-    # Parse amount or pieces
+    # Re-split if a number of pieces was found
+    if parsed['pieces']:
+        message_elements = message.split(' ')
+
+    # Remove unnecessary stuff
+    if message_elements[0] == 'di':
+        message_elements = message_elements[1:]
+        message = ' '.join(message_elements)
+
+    # Parse amount (g)
     if message_elements[0].endswith('g'):
         message_elements[0] = message_elements[0][0:-1]
         try:
@@ -179,6 +223,33 @@ def message_parser(message):
             pass
         else:
             message = ' '.join(message_elements[2:])
+
+    # Parse amount (ml)
+    if message_elements[0].endswith('ml'):
+        message_elements[0] = message_elements[0][0:-2]
+        try:
+            parsed['amount'] = int(message_elements[0])
+        except:
+            pass
+        else:
+            message = ' '.join(message_elements[1:])
+
+    if len(message_elements) > 1 and message_elements[1] == 'ml':
+        try:
+            parsed['amount'] = int(message_elements[0])
+        except:
+            pass
+        else:
+            message = ' '.join(message_elements[2:])
+
+    # Re-split if an amount was found
+    if parsed['amount']:
+        message_elements = message.split(' ')
+
+    # Remove unnecessary stuff
+    if message_elements[0] == 'di':
+        message_elements = message_elements[1:]
+        message = ' '.join(message_elements)
 
     # Parse size
     small_size_keywords = ['piccola', 'piccolo', 'piccoli', 'piccole', 'poco', 'poca', 'pochi']

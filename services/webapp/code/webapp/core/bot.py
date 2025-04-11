@@ -11,25 +11,44 @@ class Bot():
     def answer(self, message):
 
         parsed = message_parser(message)
-        # Shortucts
-        parse_food = parsed['food']
-        parsed_amount = parsed['amount']
-        parsed_pieces = parsed['pieces']     # None, 1, 2,..., 10
-        parsed_size = parsed['size']         # s, m, l
-        parsed_details = parsed['details']
 
         # Set variant
-        if parsed_pieces :
+        if parsed['pieces'] :
             variant = 'pieces'
-        elif parsed_size:
+        elif parsed['serving']:
             variant = 'servings'
         else:
             variant = None
 
-        # Query foods
-        foods = Food.query(parse_food, variant=variant)
+        # Query foods on the correct DB (based on variant)
+        foods = Food.query(parsed['food'], variant=variant)
+
+        if variant == 'pieces' and not foods:
+            # Try removing the "un", "una", etc and re-parse
+            if message.startswith('un '):
+                message_variant = message[3:]
+            elif message.startswith('uno '):
+                message_variant = message[4:]
+            elif message.startswith('una '):
+                message_variant = message[4:]
+            else:
+                message_variant = message
+
+            if message_variant != message:
+                message_variant = message_variant.strip()
+                parsed = message_parser(message_variant)
+                foods = Food.query(parsed['food'], variant='servings')
+
         if not foods:
             return 'Non ho trovato nessun alimento per "{}". Puoi provare ad essere più generale?'.format(message)
+
+        # Shortucts
+        parsed_food = parsed['food']
+        parsed_amount = parsed['amount']
+        parsed_pieces = parsed['pieces']     # None, 1, 2,..., 10
+        parsed_size = parsed['size']         # s, m, l
+        parsed_details = parsed['details']
+        parsed_serving = parsed['serving']   # None or 1
 
         # Process all observations for matching foods
         cho_observations = []
@@ -101,21 +120,30 @@ class Bot():
                 reply += 'Mediamente, *{}g/* di carboidrati per *100{}/*. '.format(cho, unit)
 
 
+        # Force serving if nothing specified
+        if not parsed_amount and not parsed_pieces and not parsed_serving:
+            parsed_serving = 1
+
+
         #-------------------------------
         # Were we given an amount?
         #-------------------------------
         if parsed_amount:
             # Compute the value for the given amount
             if cho_observations:
-                reply += 'Per *{}{}/*, il totale di carboidrati è di circa *{}{}/*.'.format(parsed['amount'],
+                reply += 'Per *{}{}/*, il totale di carboidrati è di circa *{}g/*.'.format(parsed['amount'],
                                                                                            unit,
-                                                                                           round(parsed['amount']*(cho/100)),
-                                                                                           unit)
+                                                                                           round(parsed['amount']*(cho/100)))
 
         #-------------------------------
-        # Were we given a serving size?
+        # Were we given a serving ?
         #-------------------------------
-        elif parsed_size and not parsed_pieces:
+        elif parsed_serving:
+
+            if not parsed_size:
+                serving_size =  'm'
+            else:
+                serving_size = parsed_size
 
             servings = []
             servings_all_the_same = True
@@ -123,7 +151,7 @@ class Bot():
             for food in foods:
 
                 # Small serving
-                if parsed_size == 's' and food.small_serving is not None:
+                if serving_size == 's' and food.small_serving is not None:
                     if not servings:
                         servings.append(food.small_serving)
                     else:
@@ -132,7 +160,7 @@ class Bot():
                         servings.append(food.small_serving)
 
                 # Medium serving
-                if parsed_size == 'm' and food.medium_serving is not None:
+                if serving_size == 'm' and food.medium_serving is not None:
                     if not servings:
                         servings.append(food.medium_serving)
                     else:
@@ -141,7 +169,7 @@ class Bot():
                         servings.append(food.medium_serving)
 
                 # Large serving
-                if parsed_size == 'l' and food.large_serving is not None:
+                if serving_size == 'l' and food.large_serving is not None:
                     if not servings:
                         servings.append(food.large_serving)
                     else:
@@ -159,11 +187,11 @@ class Bot():
                 serving_amount = None
 
             if serving_amount:
-                if parsed_size == 's':
+                if serving_size == 's':
                     size_name = 'piccola'
-                elif parsed_size == 'm':
+                elif serving_size == 'm':
                     size_name = 'media'
-                elif parsed_size == 'l':
+                elif serving_size == 'l':
                     size_name = 'grande'
 
                 if cho_observations:
@@ -184,13 +212,18 @@ class Bot():
         #-------------------------------
         elif parsed_pieces:
 
+            if not parsed_size:
+                piece_size =  'm'
+            else:
+                piece_size = parsed_size
+
             pieces = []
             pieces_all_the_same = True
 
             for food in foods:
 
                 # Small piece
-                if parsed_size == 's' and food.small_piece is not None:
+                if piece_size == 's' and food.small_piece is not None:
                     if not pieces:
                         pieces.append(food.small_piece)
                     else:
@@ -199,7 +232,7 @@ class Bot():
                         pieces.append(food.small_piece)
 
                 # Medium piece
-                if (parsed_size == 'm' or not parsed_size) and food.medium_piece is not None:
+                if (piece_size == 'm' or not piece_size) and food.medium_piece is not None:
                     if not pieces:
                         pieces.append(food.medium_piece)
                     else:
@@ -208,7 +241,7 @@ class Bot():
                         pieces.append(food.medium_piece)
 
                 # Large piece
-                if parsed_size == 'l' and food.large_piece is not None:
+                if piece_size == 'l' and food.large_piece is not None:
                     if not pieces:
                         pieces.append(food.large_piece)
                     else:
@@ -228,11 +261,11 @@ class Bot():
             postfix = 'o' if parsed_pieces == 1 else 'i'
 
             if piece_amount:
-                if parsed_size == 's':
+                if piece_size == 's':
                     size_name = 'piccolo' if parsed_pieces == 1 else 'piccoli '
-                elif parsed_size == 'm' or not parsed_size:
+                elif piece_size == 'm' or not piece_size:
                     size_name = 'medio' if parsed_pieces == 1 else 'medi'
-                elif parsed_size == 'l':
+                elif piece_size == 'l':
                     size_name = 'grande' if parsed_pieces == 1 else 'grandi '
 
                 if cho_observations:
