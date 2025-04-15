@@ -83,12 +83,21 @@ class SearchService():
 
     def query(self, q, variant=None, min_score=0.1, max_diff=0.3):
 
-        q = q.replace(' ', '%20') # TODO: make it all url-safe
+        # Remove unnecessary articles
+        q_without_articles = q
+        for article in ['con', 'coi', 'la', 'le', 'gli', 'i', 'alle', 'all\'', 'l\'']:
+            if ' {} '.format(article) in q:
+                q_without_articles = q_without_articles.replace(' {} '.format(article), ' ')
+        for contracted_article in ['all\'', 'l\'']:
+            if ' {}' .format(contracted_article) in q:
+                q_without_articles = q_without_articles.replace(' {}'.format(contracted_article), '')
+
+        q_cleaned = q_without_articles.replace(' ', '%20') # TODO: make it all url-safe
 
         index_name = get_index_name(self.index_prefix, variant)
-        logger.debug('Querying using index "%s"', index_name)
+        logger.debug('Querying using index "%s" for "%s" and min_score=%s, max_diff=%s', index_name, q_cleaned, min_score, max_diff)
 
-        url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q, index_name, min_score, max_diff)
+        url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q_cleaned, index_name, min_score, max_diff)
         response = requests.get(url)
         if not response.status_code == 200:
             raise Exception(response.content)
