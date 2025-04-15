@@ -71,13 +71,15 @@ class Food(models.Model):
         return self.observations.count()
 
     @classmethod
-    def query(cls, q, variant=None, search_service=None):
+    def query(cls, q, variant=None, search_service=None, debug=False, min_score=0.1, max_diff=0.3):
         if not search_service:
             search_service = SearchService()
         food_objects = []
-        for entry in search_service.query(q, variant):
+        for entry in search_service.query(q, variant, min_score, max_diff):
             try:
-                food_objects.append(Food.objects.get(uuid=entry['_id']))
+                food_object = Food.objects.get(uuid=entry['_id'])
+                food_object.from_entry = entry
+                food_objects.append(food_object)
             except Exception as e:
                 logger.error('{} @ {}'.format(e,entry))
         return food_objects

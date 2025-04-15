@@ -10,6 +10,13 @@ class Bot():
 
     def answer(self, message):
 
+        # Debug mode?
+        if message.endswith('debug'):
+            debug = True
+            message = message.replace('debug','').strip()
+        else:
+            debug = False
+
         parsed = message_parser(message)
 
         # Set variant
@@ -21,10 +28,12 @@ class Bot():
             variant = None
 
         # Query foods on the correct DB (based on variant)
-        foods = Food.query(parsed['food'], variant=variant)
+        foods = Food.query(parsed['food'], variant=variant, debug=debug)
 
-        if variant == 'pieces' and not foods:
-            # Try removing the "un", "una", etc and re-parse
+        # If nothing found and asked for pieces, try servings instead
+        if not foods and variant == 'pieces':
+
+            # Remove the "un", "una", etc and re-parse
             if message.startswith('un '):
                 message_variant = message[3:]
             elif message.startswith('uno '):
@@ -37,7 +46,11 @@ class Bot():
             if message_variant != message:
                 message_variant = message_variant.strip()
                 parsed = message_parser(message_variant)
-                foods = Food.query(parsed['food'], variant='servings')
+                foods = Food.query(parsed['food'], variant='servings', debug=debug)
+
+        # If still no foods found, use no variant at all
+        if not foods:
+            foods = Food.query(parsed['food'], variant=None, debug=debug)
 
         if not foods:
             return 'Non ho trovato nessun alimento per "{}". Puoi provare ad essere più generale?'.format(message)
@@ -82,11 +95,17 @@ class Bot():
 
         # Compose reply
         if len(foods) == 1:
-            reply =  'Ho trovato "{}". '.format(foods[0].name)
+            if debug:
+                reply =  'Ho trovato "{}" [{:.2f}]. '.format(foods[0].name, food.from_entry['_relative_score'])
+            else:
+                reply =  'Ho trovato "{}". '.format(foods[0].name)
         else:
             matching_foods_string = ''
             for food in foods:
-                matching_foods_string += '\n• {}; '.format(food.name)
+                if debug:
+                    matching_foods_string += '\n• {} [{:.2f}]; '.format(food.name, food.from_entry['_relative_score'])
+                else:
+                    matching_foods_string += '\n• {}; '.format(food.name)
             matching_foods_string = matching_foods_string[0:-2]
             reply =  'Per "{}" ho trovato: {}.\n'.format(message, matching_foods_string)
 
@@ -120,9 +139,10 @@ class Bot():
                 reply += 'Mediamente, *{}g/* di carboidrati per *100{}/*. '.format(cho, unit)
 
 
-        # Force serving if nothing specified
+        # Force serving and pieces if nothing specified
         if not parsed_amount and not parsed_pieces and not parsed_serving:
             parsed_serving = 1
+            parsed_pieces = 1
 
 
         #-------------------------------
@@ -138,7 +158,7 @@ class Bot():
         #-------------------------------
         # Were we given a serving ?
         #-------------------------------
-        elif parsed_serving:
+        if parsed_serving:
 
             if not parsed_size:
                 serving_size =  'm'
@@ -196,21 +216,21 @@ class Bot():
 
                 if cho_observations:
                     if servings_all_the_same:
-                        reply += 'Una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
-                                                                                                                            serving_amount,
-                                                                                                                            unit,
-                                                                                                                            round(serving_amount*(cho/100)))
+                        reply += 'Una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
+                                                                                                                             serving_amount,
+                                                                                                                             unit,
+                                                                                                                             round(serving_amount*(cho/100)))
                     else:
-                        reply += 'In media, una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(size_name,
-                                                                                                                                      serving_amount,
-                                                                                                                                      unit,
-                                                                                                                                      round(serving_amount*(cho/100)))
+                        reply += 'In media, una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
+                                                                                                                                       serving_amount,
+                                                                                                                                       unit,
+                                                                                                                                       round(serving_amount*(cho/100)))
 
 
         #-------------------------------
         # Were we given a piece number?
         #-------------------------------
-        elif parsed_pieces:
+        if parsed_pieces:
 
             if not parsed_size:
                 piece_size =  'm'
@@ -270,7 +290,7 @@ class Bot():
 
                 if cho_observations:
                     if pieces_all_the_same:
-                        reply += '{} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
+                        reply += 'Per {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
                                                                                                                          postfix,
                                                                                                                          size_name,
                                                                                                                          piece_amount*parsed_pieces,
@@ -284,13 +304,8 @@ class Bot():
                                                                                                                                    unit,
                                                                                                                                    round(piece_amount*parsed_pieces*(cho/100)))
 
-
-        #-------------------------------
-        # Otherwise, just provide stats
-        #-------------------------------
-        else:
-            pass
-
+        # Remove unnecessary trailing space if present
+        reply = reply.strip()
 
         return reply
 
