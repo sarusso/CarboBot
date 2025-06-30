@@ -1,0 +1,60 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="/analytics">Analytics</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Simple page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body" style="min-height:300px">
+
+                                <table class="dashboard">
+                                    <tr>
+                                        <td><b>Data</b></td>
+                                        <td><b>Query</b></td>
+                                        <td><b>Esito</b></td>
+                                    </tr>
+                                    {% for search_query in data.page_obj %}
+                                    <tr>
+                                        <td>{{ search_query.performed_at }}</td>
+                                        <td>{{ search_query.content }}</td>
+                                        <td>{% if search_query.success %}OK{% else %}FAIL{% endif %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+
+                                <!-- Pagination navigation -->
+                                <div class="pagination" style="margin-top: 20px;">
+                                    <span>
+                                        {% if data.page_obj.has_previous %}
+                                            <a href="?page=1">&laquo; First</a> |
+                                            <a href="?page={{ data.page_obj.previous_page_number }}">Previous</a> |
+                                        {% endif %}
+
+                                        <span>Page {{ data.page_obj.number }} of {{ data.page_obj.paginator.num_pages }}</span>
+
+                                        {% if data.page_obj.has_next %}
+                                            | <a href="?page={{ data.page_obj.next_page_number }}">Next</a>
+                                            | <a href="?page={{ data.page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Simple page end -->
+
+{% include "footer.html" %}

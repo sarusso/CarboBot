@@ -15,6 +15,7 @@ urlpatterns = [
     path('food_load/', views.food_load, name='food_load'),
     path('food_observations/', views.food_observations, name='food_observations'),
     path('food_observations_add/', views.food_observations_add, name='food_observations_add'),
+    path('analytics/', views.analytics, name='analytics'),
     path('chat/', views.chat, name='chat'),
     path('api/v1/telegram', api.TelegramAPI.as_view(), name='telegram_api'),
 ]

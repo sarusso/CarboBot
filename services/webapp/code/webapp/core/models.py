@@ -130,3 +130,11 @@ class FoodObservation(models.Model):
         else:
             return None
 
+
+class SearchQuery(models.Model):
+    performed_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+    success = models.BooleanField()
+
+    def __str__(self):
+        return str('Search query @ {} for "{}" (success={})'.format(str(self.performed_at).split('.')[0], self.content[0:20], self.success))

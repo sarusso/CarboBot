@@ -4,7 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from .models import Food, FoodObservation
+from django.core.paginator import Paginator
+from .models import Food, FoodObservation, SearchQuery
 from .decorators import public_view, private_view
 from .exceptions import ErrorMessage
 from .bot import Bot
@@ -412,3 +413,17 @@ def chat(request):
 
     return render(request, 'chat.html', {'data': data})
 
+
+@private_view
+def analytics(request):
+    all_queries = SearchQuery.objects.all().order_by('-performed_at')
+    paginator = Paginator(all_queries, 100)  # 100 items per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'analytics.html', {
+        'data': {
+            'page_obj': page_obj,
+        }
+    })

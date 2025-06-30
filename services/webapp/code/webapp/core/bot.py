@@ -1,4 +1,4 @@
-from .models import Food
+from .models import Food, SearchQuery
 from .utils import message_parser
 from . import emoji
 
@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 class Bot():
 
     def answer(self, message):
+
+        search_query = SearchQuery.objects.create(content=message, success=False)
 
         # Debug mode?
         if message.endswith('debug'):
@@ -306,6 +308,9 @@ class Bot():
 
         # Remove unnecessary trailing space if present
         reply = reply.strip()
+
+        search_query.success=True
+        search_query.save()
 
         return reply
 
