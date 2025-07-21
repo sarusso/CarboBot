@@ -204,6 +204,7 @@ def food_load(request):
             food.delete()
 
         for i, entry in enumerate(csv_data):
+            skip = False
             if not entry['Nome descrittivo']:
                 continue
             else:
@@ -230,6 +231,11 @@ def food_load(request):
             liquid = False
 
             for key in entry.keys():
+
+                # Ignore?
+                if 'ignora' in key.lower():
+                    if entry[key].strip():
+                        skip=True
 
                 # Servings
                 if 'porzione' in key.lower():
@@ -273,6 +279,9 @@ def food_load(request):
                 if 'tipo' in key.lower():
                     if entry[key].strip() == 'bevanda':
                         liquid = True
+
+            if skip:
+                continue
 
             if not cho_content and not protein_content and not fiber_content and not fat_content:
                 errors[i+2] = 'Nessun valore nutrizionale per "{}"?'.format(name)
