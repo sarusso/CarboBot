@@ -29,36 +29,42 @@ class Bot():
         else:
             variant = None
 
-        # Query foods on the correct DB (based on variant)
-        foods = Food.query(parsed['food'], variant=variant, debug=debug)
+        # Do we have an exact Food match?
+        foods = Food.objects.filter(name__iexact=parsed['food'])
 
-        # If nothing found and asked for pieces, try servings instead
-        if not foods and variant == 'pieces':
-
-            # Remove the "un", "una", etc and re-parse
-            if message.startswith('un '):
-                message_variant = message[3:]
-            elif message.startswith('uno '):
-                message_variant = message[4:]
-            elif message.startswith('una '):
-                message_variant = message[4:]
-            else:
-                message_variant = message
-
-            if message_variant != message:
-                message_variant = message_variant.strip()
-                parsed = message_parser(message_variant)
-                foods = Food.query(parsed['food'], variant='servings', debug=debug)
-
-        # If still no foods found, use no variant at all
+        # If not, search
         if not foods:
-            foods = Food.query(parsed['food'], variant=None, debug=debug)
+
+            # Query foods on the correct DB (based on variant)
+            foods = Food.query(parsed['food'], variant=variant, debug=debug)
+
+            # If nothing found and asked for pieces, try servings instead
+            if not foods and variant == 'pieces':
+
+                # Remove the "un", "una", etc and re-parse
+                if message.startswith('un '):
+                    message_variant = message[3:]
+                elif message.startswith('uno '):
+                    message_variant = message[4:]
+                elif message.startswith('una '):
+                    message_variant = message[4:]
+                else:
+                    message_variant = message
+
+                if message_variant != message:
+                    message_variant = message_variant.strip()
+                    parsed = message_parser(message_variant)
+                    foods = Food.query(parsed['food'], variant='servings', debug=debug)
+
+            # If still no foods found, use no variant at all
+            if not foods:
+                foods = Food.query(parsed['food'], variant=None, debug=debug)
 
         if not foods:
             return 'Non ho trovato nessun alimento per "{}". Puoi provare ad essere più generale?'.format(message)
 
         # Shortucts
-        parsed_food = parsed['food']
+        #parsed_food = parsed['food']
         parsed_amount = parsed['amount']
         parsed_pieces = parsed['pieces']     # None, 1, 2,..., 10
         parsed_size = parsed['size']         # s, m, l
