@@ -203,7 +203,10 @@ def food_load(request):
         for food in Food.objects.all():
             food.delete()
 
+        user_cache = {}
+
         for i, entry in enumerate(csv_data):
+            user = None
             skip = False
             if not entry['Nome descrittivo']:
                 continue
@@ -231,6 +234,17 @@ def food_load(request):
             liquid = False
 
             for key in entry.keys():
+
+                # Is this from a specific user?
+                if 'utente' in key.lower():
+                    if entry[key] not in user_cache:
+                        try:
+                            user = User.objects.get(username=entry[key])
+                            user_cache[entry[key]] = user.username
+                        except User.DoesNotExist:
+                            user = None
+                    else:
+                        user = user_cache[entry[key]]
 
                 # Ignore?
                 if 'ignora' in key.lower():
@@ -281,6 +295,10 @@ def food_load(request):
                         liquid = True
 
             if skip:
+                continue
+
+            if not user:
+                errors[i+2] = 'Nessun utente per "{}", non aggiunto'.format(name)
                 continue
 
             if not cho_content and not protein_content and not fiber_content and not fat_content:
