@@ -306,7 +306,7 @@ def food_load(request):
                 continue
 
             food = Food.objects.create(created_by = request.user,
-                                       name = name,
+                                       name = name.replace('(v.m.)','').strip(),
                                        main_ingredients = main_ingredients,
                                        small_serving = small_serving,
                                        medium_serving = medium_serving,
@@ -316,12 +316,34 @@ def food_load(request):
                                        large_piece = large_piece,
                                        liquid = liquid)
 
-            FoodObservation.objects.create(created_by = request.user,
-                                           food = food,
-                                           cho_ratio = cho_content/100 if cho_content is not None else None,
-                                           protein_ratio = protein_content/100 if protein_content  is not None else None,
-                                           fiber_ratio = fiber_content/100 if fiber_content  is not None else None,
-                                           fat_ratio = fat_content/100 if fat_content is not None else None)
+            # Assemble food observation
+            cho_ratio = cho_content/100 if cho_content is not None else None
+            protein_ratio = protein_content/100 if protein_content  is not None else None
+            fiber_ratio = fiber_content/100 if fiber_content  is not None else None
+            fat_ratio = fat_content/100 if fat_content is not None else None
+
+            # Handle "v.m." (varia molto)
+            observations = []
+            if 'v.m.' in name:
+                for factor in [0.8,1.0,1.2]:
+                    observations.append({'cho_ratio': cho_ratio*factor if cho_ratio is not None else None,
+                                         'protein_ratio': protein_ratio*factor if protein_ratio is not None else None,
+                                         'fiber_ratio': fiber_ratio*factor if fiber_ratio is not None else None,
+                                         'fat_ratio': fat_ratio*factor if fat_ratio is not None else None})
+
+            else:
+                observations.append({'cho_ratio':cho_ratio,
+                                     'protein_ratio':protein_ratio,
+                                     'fiber_ratio':fiber_ratio,
+                                     'fat_ratio':fat_ratio})
+
+            for observation in observations:
+                FoodObservation.objects.create(created_by = request.user,
+                                               food = food,
+                                               cho_ratio = observation['cho_ratio'],
+                                               protein_ratio = observation['protein_ratio'],
+                                               fiber_ratio = observation['fiber_ratio'],
+                                               fat_ratio = observation['fat_ratio'])
         data['errors'] = errors
         data['loaded'] = True
         logger.info('Deleted all content and loaded database')
