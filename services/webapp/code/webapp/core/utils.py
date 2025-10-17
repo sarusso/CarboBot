@@ -81,7 +81,7 @@ class SearchService():
         if response.status_code not in [200, 404]:
             raise Exception(response.content)
 
-    def query(self, q, variant=None, min_score=0.1, max_diff=0.3):
+    def query(self, q, variant=None, min_score=0.1, max_diff=0.3, see_also=False):
 
         # Remove unnecessary articles
         q_without_articles = q
@@ -97,7 +97,12 @@ class SearchService():
         index_name = get_index_name(self.index_prefix, variant)
         logger.debug('Querying using index "%s" for "%s" and min_score=%s, max_diff=%s', index_name, q_cleaned, min_score, max_diff)
 
-        url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}'.format(self.host, q_cleaned, index_name, min_score, max_diff)
+        url = 'http://{}/api/v1/search?q={}&index_name={}&min_score={}&max_diff={}&see_also={}'.format(self.host,
+                                                                                                       q_cleaned,
+                                                                                                       index_name,
+                                                                                                       min_score,
+                                                                                                       max_diff,
+                                                                                                       see_also)
         response = requests.get(url)
         if not response.status_code == 200:
             raise Exception(response.content)

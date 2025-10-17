@@ -1,2 +1,3 @@
 
 warning = '⚠️'
+info = 'ℹ️'

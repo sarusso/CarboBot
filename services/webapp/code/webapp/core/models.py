@@ -75,10 +75,14 @@ class Food(models.Model):
         if not search_service:
             search_service = SearchService()
         food_objects = []
-        for entry in search_service.query(q, variant, min_score, max_diff):
+        for entry in search_service.query(q, variant, min_score, max_diff, see_also=True):
             try:
                 food_object = Food.objects.get(uuid=entry['_id'])
                 food_object.from_entry = entry
+                if 'see_also' in entry:
+                    food_object.see_also = True
+                else:
+                    food_object.see_also = False
                 food_objects.append(food_object)
             except Exception as e:
                 logger.error('{} @ {}'.format(e,entry))

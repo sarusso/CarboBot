@@ -62,6 +62,18 @@ class Bot():
 
         if not foods:
             return 'Non ho trovato nessun alimento per "{}". Puoi provare ad essere più generale?'.format(message)
+        
+        all_foods = foods
+        foods = []
+        see_also_foods = []
+        for food in all_foods:
+            try:
+                if food.see_also:
+                    see_also_foods.append(food)
+                else:
+                    foods.append(food)
+            except AttributeError:
+                foods.append(food)
 
         # Shortucts
         #parsed_food = parsed['food']
@@ -311,6 +323,12 @@ class Bot():
                                                                                                                                    piece_amount*parsed_pieces,
                                                                                                                                    unit,
                                                                                                                                    round(piece_amount*parsed_pieces*(cho/100)))
+        # See also
+        if see_also_foods:
+            reply += '\n{} Vedi anche: '.format(emoji.info)
+            for food in see_also_foods:
+                reply += food.name + ', '
+            reply = reply[:-2]+'. '
 
         # Remove unnecessary trailing space if present
         reply = reply.strip()

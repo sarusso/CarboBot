@@ -128,7 +128,8 @@ async def delete_item(item: Item):
 async def search(q: str = Query(..., min_length=3, max_length=100),
                  index_name: Optional[str] = None,
                  min_score: Optional[float] = None,
-                 max_diff: Optional[float] = None):
+                 max_diff: Optional[float] = None,
+                 see_also: Optional[bool] = False):
 
 
     # Perform the search
@@ -182,5 +183,17 @@ async def search(q: str = Query(..., min_length=3, max_length=100),
     ]
     logger.debug('close_hits={}'.format(close_hits))
 
-    return close_hits
+    # Assign results
+    results = close_hits
+
+    # Compose the "see also"
+    if see_also:
+        see_also_hits = []
+        for hit in high_score_hits:
+            if hit not in close_hits:
+                hit['see_also'] = True
+                see_also_hits.append(hit)
+        results += see_also_hits
+
+    return results
 
