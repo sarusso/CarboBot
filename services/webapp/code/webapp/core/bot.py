@@ -141,10 +141,10 @@ class Bot():
         unit = '/'.join(units)
 
         if cho_variation > 0.15:
-            reply += '️{} Varibilità fra i risultati! (~{}%).\n'.format(emoji.warning, int(cho_variation*100))
+            reply += '{} Alta varibilità fra i risultati! (~{}%).\n'.format(emoji.warning, int(cho_variation*100))
 
         if parsed_details:
-            reply += 'Valori nutrizionali medi: '
+            reply += '{} Valori nutrizionali medi: '.format(emoji.stats)
             if cho_observations:
                 reply += '{}g di carboidrati, '.format(cho)
             if protein_observations:
@@ -156,7 +156,7 @@ class Bot():
             reply += 'per 100{}. '.format(unit)
         else:
             if cho_observations:
-                reply += 'Mediamente, *{}g/* di carboidrati per *100{}/*. '.format(cho, unit)
+                reply += '{} In genere, *{}g/* di carboidrati per *100{}/*. '.format(emoji.stats, cho, unit)
 
 
         # Force serving and pieces if nothing specified
@@ -178,6 +178,7 @@ class Bot():
         #-------------------------------
         # Were we given a serving ?
         #-------------------------------
+        warn_be_more_specific_servings = False
         if parsed_serving:
 
             if not parsed_size:
@@ -235,21 +236,26 @@ class Bot():
                     size_name = 'grande'
 
                 if cho_observations:
-                    if servings_all_the_same:
-                        reply += 'Una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
-                                                                                                                             serving_amount,
-                                                                                                                             unit,
-                                                                                                                             round(serving_amount*(cho/100)))
-                    else:
-                        reply += 'In media, una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
-                                                                                                                                       serving_amount,
-                                                                                                                                       unit,
-                                                                                                                                       round(serving_amount*(cho/100)))
+                    if len(servings) == len(foods):
+                        if servings_all_the_same:
+                            reply += 'Una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
+                                                                                                                                 serving_amount,
+                                                                                                                                 unit,
+                                                                                                                                 round(serving_amount*(cho/100)))
+                        else:
+                            warn_be_more_specific_servings = True
+                            #reply += 'In media, una porzione {} è di circa *{}{}/*, per un totale di circa *{}g/* di carboidrati. '.format(size_name,
+                            #                                                                                                               serving_amount,
+                            #                                                                                                               unit,
+                            #                                                                                                               round(serving_amount*(cho/100)))
 
+                    else:
+                        warn_be_more_specific_servings = True
 
         #-------------------------------
         # Were we given a piece number?
         #-------------------------------
+        warn_be_more_specific_pieces = False
         if parsed_pieces:
 
             if not parsed_size:
@@ -309,20 +315,34 @@ class Bot():
                     size_name = 'grande' if parsed_pieces == 1 else 'grandi '
 
                 if cho_observations:
-                    if pieces_all_the_same:
-                        reply += 'Per {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
-                                                                                                                         postfix,
-                                                                                                                         size_name,
-                                                                                                                         piece_amount*parsed_pieces,
-                                                                                                                         unit,
-                                                                                                                         round(piece_amount*parsed_pieces*(cho/100)))
+                    if len(pieces) == len(foods):
+                        if pieces_all_the_same:
+                            reply += 'Per {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
+                                                                                                                             postfix,
+                                                                                                                             size_name,
+                                                                                                                             piece_amount*parsed_pieces,
+                                                                                                                             unit,
+                                                                                                                             round(piece_amount*parsed_pieces*(cho/100)))
+                        else:
+                            warn_be_more_specific_pieces = True
+                            #reply += 'In media, {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
+                            #                                                                                                           postfix,
+                            #                                                                                                           size_name,
+                            #                                                                                                           piece_amount*parsed_pieces,
+                            #                                                                                                           unit,
+                            #                                                                                                           round(piece_amount*parsed_pieces*(cho/100)))
                     else:
-                        reply += 'In media, {} pezz{} {} sono circa *{}{}/*, per un totale di circa *{}g/* di carboidrati.'.format(parsed_pieces,
-                                                                                                                                   postfix,
-                                                                                                                                   size_name,
-                                                                                                                                   piece_amount*parsed_pieces,
-                                                                                                                                   unit,
-                                                                                                                                   round(piece_amount*parsed_pieces*(cho/100)))
+                        warn_be_more_specific_pieces = True
+
+        if warn_be_more_specific_servings and warn_be_more_specific_pieces:
+            reply += ' Per avere informazioni sulle porzioni e/o i pezzi, sii più specifico.'
+
+        if warn_be_more_specific_servings and not warn_be_more_specific_pieces:
+            reply += ' Per avere informazioni sulle porzioni, sii più specifico.'
+
+        if not warn_be_more_specific_servings and warn_be_more_specific_pieces:
+            reply += ' Per avere informazioni sui pezzi, sii più specifico.'
+
         # See also
         if see_also_foods:
             reply += '\n{} Vedi anche: '.format(emoji.info)
