@@ -116,9 +116,9 @@ class Bot():
         # Compose reply
         if len(foods) == 1:
             if debug:
-                reply =  'Ho trovato "{}" [{:.2f}]. '.format(foods[0].name, food.from_entry['_relative_score'])
+                reply =  '{} Ho trovato "*{}/*" [{:.2f}].\n'.format(emoji.lens, foods[0].name, food.from_entry['_relative_score'])
             else:
-                reply =  'Ho trovato "{}". '.format(foods[0].name)
+                reply =  '{} Ho trovato "*{}/*".\n'.format(emoji.lens, foods[0].name)
         else:
             matching_foods_string = ''
             for food in foods:
@@ -127,7 +127,8 @@ class Bot():
                 else:
                     matching_foods_string += '\n• {}; '.format(food.name)
             matching_foods_string = matching_foods_string[0:-2]
-            reply =  'Per "{}" ho trovato: {}.\n'.format(message, matching_foods_string)
+            #reply =  'Per "{}" ho trovato: {}.\n'.format(message, matching_foods_string) # verbose
+            reply =  '{} Ho trovato: {}.\n'.format(emoji.lens, matching_foods_string)
 
         # Set unit
         units = []
