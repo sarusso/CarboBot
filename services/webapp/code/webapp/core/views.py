@@ -253,25 +253,25 @@ def food_load(request):
 
                 # Servings
                 if 'porzione' in key.lower():
-                    if 'piccola' in key.lower():
+                    if 'piccola' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             small_serving = int(float(entry[key]))
-                    if 'media' in key.lower():
+                    if 'media' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             medium_serving = int(float(entry[key]))
-                    if 'grande' in key.lower():
+                    if 'grande' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             large_serving = int(float(entry[key]))
 
                 # Pieces
                 if 'pezzo' in key.lower():
-                    if 'piccolo' in key.lower():
+                    if 'piccolo' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             small_piece = int(float(entry[key]))
-                    if 'medio' in key.lower():
+                    if 'medio' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             medium_piece = int(float(entry[key]))
-                    if 'grande' in key.lower():
+                    if 'grande' in key.lower() and not entry[key].strip().lower().endswith('no'):
                         if entry[key].strip():
                             large_piece = int(float(entry[key]))
 
