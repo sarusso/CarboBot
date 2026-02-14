@@ -1,0 +1,165 @@
+{% include "header.html" %}
+{% include "navigation.html" %}
+
+                <!-- Title area start -->
+                <div class="row title-bar">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body pathbar">
+                                <a href="">Aiuto</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Title area end -->
+
+                <!-- Help page start -->
+                <div class="row" style="margin-top:22px">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4>Cos'è CarboBot</h4>
+                                <p style="margin-top:20px">
+                                    CarboBot è un piccolo chatbot che fornisce i valori di carboidrati contenuti negli alimenti
+                                    tramite un'interazione rapida e senza distrazioni.
+                                </p>
+                                <p style="margin-top:10px; margin-bottom: 30px">
+                                    Utilizza un database curato manualmente e validato da professionisti del settore.
+                                    In caso di più varianti di alimento, o match multipli, CarboBot fornirà i valori aggregati, ed in
+                                    caso di alta variabilità nei risultati, avviserà. CarboBot essere usato sia da questo sito web che da bot Telegram (@c_a_r_b_o_bot)
+                                </p>
+
+                               <hr/>
+
+                                <table style="border:0; margin: 30px auto 20px; width:300px;">
+                                <tr>
+                                <td style="background-color:#d2e8fc;  padding: 10px;">
+                                <b>Tu</b>: pasta integrale
+                                </td>
+                                <td style="width:40px">
+                                </td>
+                                </tr>
+                                </table>
+
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="width:40px">
+                                </td>
+                                <td style="background-color:#fce2c5; padding: 10px;">
+                                <b>CarboBot</b>: 🔍 Ho trovato: <br/>• pasta integrale non condita; <br/>• pasta integrale poco condita; <br/>• pasta integrale mediamente condita; <br/>• pasta integrale molto condita.<br/>⚠️ Alta varibilità fra i risultati! (~50%).<br/>📊 In genere, <b>26g</b> di carboidrati per <b>100g</b>.  Per avere informazioni sulle porzioni, sii più specifico.
+                                </td>
+                                </tr>
+                                </table>
+
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="background-color:#d2e8fc;  padding: 10px;">
+                                <b>Tu</b>: pasta integrale molto condita
+                                </td>
+                                <td style="width:40px">
+                                </td>
+                                </tr>
+                                </table>
+
+                                <table style="border:0; margin: 0 auto; width:300px; margin-bottom:20px">
+                                <tr>
+                                <td style="width:40px">
+                                </td>
+                                <td style="background-color:#fce2c5; padding: 10px;">
+                                <b>CarboBot</b>: 🔍 Ho trovato "<b>pasta integrale molto condita</b>".<br/>📊 In genere, <b>18g</b> di carboidrati per <b>100g</b>. Una porzione media è di circa <b>300g</b>, per un totale di circa <b>54g</b> di carboidrati.
+                                </td>
+                                </tr>
+                                </table>
+
+                                <form id="try-form" method="POST" action="/chat/" style="display:none">
+                                    <input type="hidden" name="message" id="try-form-message">
+                                    <input type="hidden" name="conversation_id" value="help-example">
+                                </form>
+                                <script>function tryIt(msg){document.getElementById('try-form-message').value=msg;document.getElementById('try-form').submit();}</script>
+
+                                <hr style="margin-top:50px; margin-bottom:30px">
+                                <h4>Come funziona</h4>
+
+                                <p style="margin-top:20px">
+                                    Per <b>cercare un alimento</b>, scrivi semplicemente il nome dell'alimento.
+                                </p>
+                                <table class="table table-bordered" style="max-width:700px; margin-top:10px">
+                                    <thead><tr><th>Esempio</th><th>Cosa fa</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>pasta</code></td><td>Cerca "pasta" e mostra i carboidrati per 100g</td><td><a href="#" onclick="tryIt('pasta');return false;">Prova</a></td></tr>
+                                        <tr><td><code>pane integrale</code></td><td>Cerca "pane integrale" e mostra i carboidrati per 100g, porzione e/o pezzo</td><td><a href="#" onclick="tryIt('pane integrale');return false;">Prova</a></td></tr>
+                                        <tr><td><code>biscotti</code></td><td>Cerca "biscotti" e mostra i carboidrati per 100g, porzione e/o pezzo</td><td><a href="#" onclick="tryIt('biscotti');return false;">Prova</a></td></tr>
+                                    </tbody>
+                                </table>
+
+                                <p style="margin-top:30px">
+                                    Per <b>specificare una quantità</b> in grammi o millilitri, scrivila
+                                    seguita da <code>g</code> o <code>ml</code> prima del nome dell'alimento.
+                                </p>
+                                <table class="table table-bordered" style="max-width:700px; margin-top:10px">
+                                    <thead><tr><th>Esempio</th><th>Cosa fa</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>250g pasta</code></td><td>Cerca "pasta" e calcola i carboidrati per 80g</td><td><a href="#" onclick="tryIt('250g pasta');return false;">Prova</a></td></tr>
+                                        <tr><td><code>150 g riso</code></td><td>Cerca "riso" e calcola i carboidrati per 150g</td><td><a href="#" onclick="tryIt('150 g riso');return false;">Prova</a></td></tr>
+                                        <tr><td><code>200ml latte</code></td><td>Cerca "latte" e calcola i carboidrati per 200ml</td><td><a href="#" onclick="tryIt('200ml latte');return false;">Prova</a></td></tr>
+                                    </tbody>
+                                </table>
+
+                                <p style="margin-top:30px">
+                                    Per <b>specificare un numero di pezzi</b>, scrivili (in cifre o in lettere) prima del nome dell'alimento.
+                                </p>
+                                <table class="table table-bordered" style="max-width:700px;  margin-top:10px">
+                                    <thead><tr><th>Esempio</th><th>Cosa fa</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>tre albicocche fresche</code></td><td>Cerca "albicocche fresche" e calcola i carboidrati per tre pezzi (medi)</td><td><a href="#" onclick="tryIt('tre albicocche');return false;">Prova</a></td></tr>
+                                        <tr><td><code>2 biscotti</code></td><td>Cerca "biscoti" e calcola i carboidrati per due pezzi (medi)</td><td><a href="#" onclick="tryIt('2 biscotti');return false;">Prova</a></td></tr>
+                                    </tbody>
+                                </table>
+                                <p><small>Numeri in lettere supportati: da uno a dieci.</small></p>
+
+                                <p style="margin-top:30px">
+                                    Per <b>specificare una porzione</b>, usa le parole "porzione di", "pacchetto di",
+                                    "confezione di" o "bicchiere di" prima del nome dell'alimento.
+                                </p>
+                                <table class="table table-bordered" style="max-width:700px;  margin-top:10px">
+                                    <thead><tr><th>Esempio</th><th>Cosa fa</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>una porzione di pasta</code></td><td>Calcola i carboidrati per una porzione (media) di pasta</td><td><a href="#" onclick="tryIt('una porzione di pasta');return false;">Prova</a></td></tr>
+                                        <tr><td><code>un pacchetto di crackers</code></td><td>Calcola i carboidrati per un pacchetto (medio) di crackers</td><td><a href="#" onclick="tryIt('un pacchetto di crackers');return false;">Prova</a></td></tr>
+                                        <tr><td><code>un bicchiere di latte</code></td><td>Calcola i carboidrati per un bicchiere (medio) di latte</td><td><a href="#" onclick="tryIt('un bicchiere di latte');return false;">Prova</a></td></tr>
+                                    </tbody>
+                                </table>
+
+                                <p style="margin-top:30px">
+                                    Per <b>specificare una porzione</b>, aggiungi un aggettivo di dimensione
+                                    per indicare se vuoi la porzione o il pezzo piccolo, medio o grande
+                                </p>
+                                <table class="table table-bordered" style="max-width:700px; margin-top:10px">
+                                    <thead><tr><th>Esempio</th><th>Cosa fa</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>una pizza piccola</code></td><td>Cerca "pizza" e calcola i carboidrati per una pizza picocla </td><td><a href="#" onclick="tryIt('una pizza piccola');return false;">Prova</a></td></tr>
+                                        <tr><td><code>un biscotto grande</code></td><td>Cerca "biscotto" e calcola i carboidrati per un biscotto grande</td><td><a href="#" onclick="tryIt('un biscotto grande');return false;">Prova</a></td></tr>
+                                        <tr><td><code>una porzione di pasta grande</code></td><td>Cerca "pasta" e calcola i carboidrati per una porzione grande</td><td><a href="#" onclick="tryIt('una porzione di pasta grande');return false;">Prova</a></td></tr>
+                                    </tbody>
+                                </table>
+                                <p><small>Dimensioni supportate: piccolo/a/i/e, medio/a/i/e, grande/i.</small></p>
+
+                                <hr style="margin-top:50px; margin-bottom:30px">
+
+                                <h4>Suggerimenti</h4>
+                                <ul>
+                                    <li>Se CarboBot non trova un alimento, prova ad essere più generale (es. "biscotto" invece di "biscotto al cioccolato fondente").</li>
+                                    <li>Se la dimensione (piccolo/medio/grande) non viene specificata, viene usata quella media.</li>
+                                    <li>Se non specifichi nè quantità, nè; pezzi, nè; porzione, CarboBot mostra automaticamente le informazioni per una porzione e un pezzo, se disponibili.</li>
+                                    <li>CarboBot può trovare più risultati simili: in quel caso li mostra tutti e calcola una media dei valori, avvisando in caso di alta variabilità.</li>
+                                </ul>
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Help page end -->
+
+{% include "footer.html" %}

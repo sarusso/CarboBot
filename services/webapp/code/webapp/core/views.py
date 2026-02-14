@@ -110,6 +110,10 @@ def entrypoint(request):
 def main(request):
     return render(request, 'main.html', {'data': {}})
 
+@public_view
+def help_page(request):
+    return render(request, 'help.html', {'data': {}})
+
 @private_view
 def food(request):
     if request.method == 'POST':

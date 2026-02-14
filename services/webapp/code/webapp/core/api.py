@@ -77,7 +77,7 @@ class TelegramAPI(APIView):
             message = request.data['message']['text'].strip()
             logger.debug('Received message: "%s"', message)
             if message == '/start':
-                reply = 'Benvenuto su CarboBot!'
+                reply = 'Benvenuto su CarboBot! Scrivi /aiuto in qualsiasi momento per informazioni su come usarlo.'
             else:
                 bot = Bot()
                 reply = bot.answer(message)

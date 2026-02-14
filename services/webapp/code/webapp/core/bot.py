@@ -10,6 +10,17 @@ class Bot():
 
     def answer(self, message):
 
+        # Help command
+        if message.strip().lower() in ['/aiuto', '/help', 'aiuto', 'help']:
+            return ('Scrivi il nome di un alimento per conoscerne i valori di carboidrati. '
+                    'In caso di più varianti, CarboBot ti fornirà i valori aggregati, ed in '
+                    'caso di alta variabilità nei risultati, ti avviserà.\n\n'
+                    'Puoi anche specificare:\n'
+                    '• Una quantità: *80g pasta/*, *200ml latte/*\n'
+                    '• Un numero: *tre albicocche/*, *2 biscotti/*\n'
+                    '• Una porzione: *una porzione di pasta/*, *un bicchiere di latte/*\n'
+                    '• Una dimensione: *una pesca piccola/*, *un biscotto grande/*')
+
         search_query = SearchQuery.objects.create(content=message, success=False)
 
         # Debug mode?

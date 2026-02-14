@@ -2902,6 +2902,16 @@ table.dashboard_noborder td {
 
 
 /*-------------------------*/
+/*  Card body list style   */
+/*-------------------------*/
+
+.card-body ul {
+    list-style: disc outside;
+    margin-left: 26px;
+    margin-top: 10px;
+}
+
+/*-------------------------*/
 /* Theme fixes and changes */
 /*-------------------------*/
 
@@ -3194,7 +3204,11 @@ table.app_editor-header td {
 code, samp, kbd {
     font-family: "Courier New", Courier, monospace, sans-serif;
     text-align: left;
-    color: #555;
+    color: #c25;
+    background-color: #f7f2f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
     }
 pre code {
     line-height: 1.6em;
