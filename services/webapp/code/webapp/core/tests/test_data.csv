@@ -1,0 +1,105 @@
+Ignora,Nome descrittivo,Ingredienti principali,Tipo,"Porzione
+piccola
+(g o ml)","Porzione
+media
+(g o ml)","Porzione
+grande
+(g o ml)","Pezzo
+piccolo
+(g o ml)","Pezzo
+medio
+(g o ml)","Pezzo
+grande
+(g o ml)","CHO
+per 100g
+o 100ml","Grassi
+per 100g
+o 100ml","Proteine
+per 100g
+o 100ml","Fibre
+per 100g
+o 100ml",Utente,Note
+,CEREALI ,,,,,,,,,,,,,,
+x,pasta bianca non condita,semola,cibo,,200,,,,,38,,,,testuser,
+,pasta bianca poco condita,"semola, condimento ",cibo,150,200,250,,,,30,,,,testuser,
+,pasta bianca mediamente condita,"semola, condimento ",cibo,200,250,300,,,,25,,,,testuser,
+,pasta bianca molto condita,"semola, condimento ",cibo,250,300,350,,,,20,,,,testuser,
+x,pasta integrale non condita,semola,cibo,,200,,,,,36,,,,testuser,
+,pasta integrale poco condita,"semola, condimento ",cibo,150,200,250,,,,28,,,,testuser,
+,pasta integrale mediamente condita,"semola, condimento ",cibo,200,250,300,,,,23,,,,testuser,
+,pasta integrale molto condita,"semola, condimento ",cibo,250,300,350,,,,18,,,,testuser,
+x,pasta all'uovo fresca non condita,"semola, uova ",cibo,,180,,,,,45,,,,testuser,
+,pasta all'uovo fresca poco condita,"semola, uova, condimento ",cibo,150,200,250,,,,31,,,,testuser,
+,pasta all'uovo fresca mediamente condita,"semola, uova, condimento ",cibo,200,250,300,,,,26,,,,testuser,
+,pasta all'uovo fresca molto condita,"semola, uova, condimento ",cibo,250,300,350,,,,21,,,,testuser,
+x,pasta all'uovo secca non condita,"semola, uova",cibo,160,210,260,,,,24,,,,testuser,
+,pasta all'uovo secca poco condita,"semola, uova, condimento ",cibo,210,260,310,,,,23,,,,testuser,
+,pasta all'uovo secca mediamente condita,"semola, uova, condimento ",cibo,260,310,360,,,,18,,,,testuser,
+,pasta all'uovo secca molto condita,"semola, uova, condimento ",cibo,310,360,410,,,,13,,,,testuser,
+,cornflakes ,"mais, zucchero, sale",cibo,20,30,40,,,,87,,,,testuser,
+x,cous cous di grano non condito,semola di grano duro precotto,cibo,135,185,235,,,,40,,,,testuser,
+,cous cous di grano poco condito,"semola di grano duro precotto, condimento ",cibo,185,235,285,,,,45,,,,testuser,
+,cous cous di grano mediamente condito ,"semola di grano duro precotto, condimento ",cibo,235,285,335,,,,35,,,,testuser,
+,cous cous di grano molto condito ,"semola di grano duro precotto, condimento ",cibo,285,335,385,,,,30,,,,testuser,
+,cracker classico,"farina, olio, lievito, sale",cibo,25,30,35,,6.5,,67.5,,,,testuser,
+,"cracker condito (formaggio, pomodoro, ecc.) ","farina, olio, condimento, lievito, sale",cibo,25,30,35,,6.5,,63,,,,testuser,
+,cracker integrale,"farina, olio, lievito, sale",cibo,25,30,35,,6.5,,62,,,,testuser,
+,crespella (solo base) (v.m.),"uova, farina di grano, latte, burro",cibo,,40,,,40,,40,,,,testuser,
+,"crespella mediamente farcita, salata ","uova, farina di grano, latte, burro, condimento salato",cibo,,100,,,100,,15,,,,testuser,
+,"crespella molto farcita, salata ","uova, farina di grano, latte, burro, condimento salato",cibo,,150,,,150,,15,,,,testuser,
+,crostini classici (v.m.),"farina di frumento, olio, lievito, sale",cibo,,100,,,,,65,,,,testuser,
+,crostini integrali (v.m.),"farina di frumento, olio, lievito, sale",cibo,,100,,,,,60,,,,testuser,
+,crusca di frumento,crusca di frumento ,cibo,20,30,40,,,,48,,,,testuser,
+,farina di castagne ,farina di castagne,cibo,,,,,,,62,,,,testuser,
+,farina di cocco ,farina di cocco,cibo,,,,,,,6,,,,testuser,
+,farro non condito,farro,cibo,135,185,235,,,,37,,,,testuser,
+,farro poco condito ,"farro, condimento ",cibo,185,235,285,,,,16,,,,testuser,
+,farro mediamente condito ,"farro, condimento ",cibo,235,285,335,,,,21,,,,testuser,
+,farro molto condito ,"farro, condimento ",cibo,285,335,385,,,,26,,,,testuser,
+,focaccia bianca ,"farina di grano tenero, olio, lievito, sale",cibo,150,200,250,,,,41,,,,testuser,
+,frisella,"farina di grano duro, sale, lievito",cibo,,,,40,50,60,74,,,,testuser,
+,fette biscottate classiche,"farina di frumento, lievito, olio, zucchero, sale",cibo,20,30,40,,10,,75,,,,testuser,
+,fette biscottate integrali,"farina di frumento, lievito, olio, zucchero, sale",cibo,20,30,40,,10,,63,,,,testuser,
+,gallette di mais ,"farina di mais, olio, sale",cibo,20,30,40,,9,,85,,,,testuser,
+,galletta di riso,"farina di riso, olio, sale",cibo,20,30,40,,9,,80,,,,testuser,
+,gnocchi di patate non conditi ,"patate, farina di grano, uova",cibo,130,180,230,,,,34,,,,testuser,
+,gnocchi di patate poco conditi ,"patate, farina di grano, uova, condimento",cibo,160,210,260,,,,21,,,,testuser,
+,gnocchi di patate mediamente conditi ,"patate, farina di grano, uova, condimento",cibo,230,280,330,,,,18,,,,testuser,
+,gnocchi di patate molto conditi ,"patate, farina di grano, uova, condimento",cibo,280,330,380,,,,15,,,,testuser,
+,gnocchi di zucca (v.m.) ,"zucca, farina di grano, patate, uova",cibo,130,180,230,,,,30,,,,testuser,
+,grissini classici,"farina, olio, sale, lievito",cibo,20,30,40,1.5,3,5,65,,,,testuser,
+,grissini integrali,"farina, olio, sale, lievito",cibo,20,30,40,1.5,3,5,60,,,,testuser,
+,insalata di riso (v.m.),"riso, verdure, formaggio, tonno, prosciutto",cibo,250,350,450,,,,16,,,,testuser,
+,lasagne al ragù,"farina di grano, uovo, besciamella, pomodoro, carne, cipolla, carote, sedano, olio",cibo,150,250,350,,,,15,,,,testuser,"Checl porzioni, sdoppiata per sinonimo"
+,lasagne alle verdure ,"farina di grano, uovo, besciamella, pomodoro, verdure, cipolla, carote, sedano, olio",cibo,150,250,350,,,,15,,,,testuser,
+,mais dolce in scatola (v.m.),mais ,cibo,50,80,110,,,,20.5,,,,testuser,1/2 confezione di mais in scatola
+,pannocchia di mais (solo chicchi),mais ,cibo,,,,,200,,20,,,,testuser,
+,muesli ,muesli ,cibo,30,50,70,,,,71,,,,testuser,
+,orzo non condito ,orzo,cibo,165,215,265,,,,27,,,,testuser,
+,orzo poco condito ,"orzo, condimento ",cibo,215,265,315,,,,25,,,,testuser,
+,orzo moderatamente condito ,"orzo, condimento ",cibo,265,315,365,,,,20,,,,testuser,
+,orzo molto condito,"orzo, condimento ",cibo,315,365,415,,,,15,,,,testuser,
+,pane azzimo,"farina, sale",cibo,20,30,40,,15,,82,,,,testuser,
+,pane carasau,"farina, sale",cibo,20,30,40,,35,,73,,,,testuser,
+,pane bianco fresco ,"farina, lievito, sale",cibo,60,100,140,,,,60,,,,testuser,
+,pane integrale fresco ,"farina, integrale, lievito, sale",cibo,60,100,140,,,,50,,,,testuser,
+,pane bianco confezionato,"farina, lievito, sale",cibo,60,100,140,,,,48,,,,testuser,Controllare CHO!
+,pane integrale confezionato,"farina, integrale, lievito, sale",cibo,60,100,140,,,,42,,,,testuser,
+,pane semintegrale,"farina, semintegrale, lievito, sale",cibo,60,100,140,,,,52,,,,testuser,
+x,panino integrale ,"farina, integrale, lievito, sale",cibo,60,100,140,,,,44,,,,testuser,
+x,panino bianco ,"farina, lievito, sale",cibo,60,100,140,,,,,,,,testuser,
+,pane di segale ,"farina, segale, lievito, sale",cibo,60,100,140,,,,46,,,,testuser,
+,pane al latte ,"farina, latte, lievito, sale",cibo,60,100,140,,,,48,,,,testuser,
+,pane alle olive,"farina, olive, lievito, sale",cibo,60,100,140,,,,52,,,,testuser,
+,pane all'uvetta,"farina, uvetta, zucchero, lievito",cibo,60,100,140,,,,52,,,,testuser,
+,pangrattato ,"farina, lievito, sale",cibo,20,30,40,,,,78,,,,testuser,
+,pancarrè,"farina, olio, lievito, sale",cibo,25,50,75,,18,,50,,,,testuser,
+,pane all'olio,"farina, olio, lievito, sale",cibo,60,80,100,60,80,100,52,,,,testuser,
+x,fetta di pane bianco,"farina, lievito, sale",cibo,,,,20,25,30,50,,,,testuser,
+x,fetta di pane intergale,"farina, integrale, lievito, sale",cibo,,,,20,25,30,40,,,,testuser,
+,piadina (v.m.),"farina di grano, latte, zucchero, strutto, lievito",cibo,,,,100,120,140,52,,,,testuser,
+,pizza bianca,"farina di grano, olio, lievito, sale",cibo,150,200,250,150,200,250,58,,,,testuser,
+,pizza margherita ,"farina di grano, salsa di pomodoro, mozzarella, olio, basilico, lievito, sale",cibo,300,350,400,,,,36,,,,testuser,
+,base pizza (pizzeria),"farina di grano, olio, lievito, sale",cibo,,,,,250,,50,,,,testuser,
+,pizza con solo pomodoro,"farina di grano, salsa di pomodoro, olio, basilico, lievito, sale",cibo,250,300,350,250,300,350,40,,,,testuser,
+,pizza farcita,"farina di grano, salsa di pomodoro, mozzarella, condimento, olio, basilico, lievito, sale",,350,450,550,,,,30,,,,testuser,

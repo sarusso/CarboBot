@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from .models import Food, FoodObservation, SearchQuery
 from .decorators import public_view, private_view
 from .exceptions import ErrorMessage
+from .utils import load_foods_from_csv
 from .bot import Bot
 import uuid
 
@@ -199,155 +200,10 @@ def food_load(request):
                     file_content += chunk
         #logger.debug(file_content)
 
-        import csv
-        with open('/tmp/{}'.format(fild_uuid), mode='r') as f:
-            reader = csv.DictReader(f)
-            csv_data = [row for row in reader]
-
         for food in Food.objects.all():
             food.delete()
 
-        user_cache = {}
-
-        for i, entry in enumerate(csv_data):
-            user = None
-            skip = False
-            if not entry['Nome descrittivo']:
-                continue
-            else:
-                name = entry['Nome descrittivo'].strip()
-            if not entry['Ingredienti principali']:
-                errors[i+2] = 'Nessun ingrediente principale per "{}"?'.format(name)
-                continue
-            else:
-                main_ingredients = [ingredient.strip() for ingredient in entry['Ingredienti principali'].split(',')]
-
-            small_serving = None
-            medium_serving = None
-            large_serving = None
-
-            small_piece = None
-            medium_piece = None
-            large_piece = None
-
-            cho_content = None
-            protein_content = None
-            fiber_content = None
-            fat_content = None
-
-            liquid = False
-
-            for key in entry.keys():
-
-                # Is this from a specific user?
-                if 'utente' in key.lower():
-                    if entry[key] not in user_cache:
-                        try:
-                            user = User.objects.get(username=entry[key])
-                            user_cache[entry[key]] = user.username
-                        except User.DoesNotExist:
-                            user = None
-                    else:
-                        user = user_cache[entry[key]]
-
-                # Ignore?
-                if 'ignora' in key.lower():
-                    if entry[key].strip():
-                        skip=True
-
-                # Servings
-                if 'porzione' in key.lower():
-                    if 'piccola' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            small_serving = int(float(entry[key]))
-                    if 'media' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            medium_serving = int(float(entry[key]))
-                    if 'grande' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            large_serving = int(float(entry[key]))
-
-                # Pieces
-                if 'pezzo' in key.lower():
-                    if 'piccolo' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            small_piece = int(float(entry[key]))
-                    if 'medio' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            medium_piece = int(float(entry[key]))
-                    if 'grande' in key.lower() and not entry[key].strip().lower().endswith('no'):
-                        if entry[key].strip():
-                            large_piece = int(float(entry[key]))
-
-                # Values
-                if 'cho' in key.lower():
-                    if entry[key].strip():
-                        cho_content = float(entry[key])
-                if 'protein' in key.lower():
-                    if entry[key].strip():
-                        protein_content = float(entry[key])
-                if 'fibre' in key.lower():
-                    if entry[key].strip():
-                        fiber_content = float(entry[key])
-                if 'proteine' in key.lower():
-                    if entry[key].strip():
-                        fat_content = float(entry[key])
-
-                # Liquid
-                if 'tipo' in key.lower():
-                    if entry[key].strip() == 'bevanda':
-                        liquid = True
-
-            if skip:
-                continue
-
-            if not user:
-                errors[i+2] = 'Nessun utente per "{}", non aggiunto'.format(name)
-                continue
-
-            if not cho_content and not protein_content and not fiber_content and not fat_content:
-                errors[i+2] = 'Nessun valore nutrizionale per "{}"?'.format(name)
-                continue
-
-            food = Food.objects.create(created_by = request.user,
-                                       name = name.replace('(v.m.)','').strip(),
-                                       main_ingredients = main_ingredients,
-                                       small_serving = small_serving,
-                                       medium_serving = medium_serving,
-                                       large_serving = large_serving,
-                                       small_piece = small_piece,
-                                       medium_piece = medium_piece,
-                                       large_piece = large_piece,
-                                       liquid = liquid)
-
-            # Assemble food observation
-            cho_ratio = cho_content/100 if cho_content is not None else None
-            protein_ratio = protein_content/100 if protein_content  is not None else None
-            fiber_ratio = fiber_content/100 if fiber_content  is not None else None
-            fat_ratio = fat_content/100 if fat_content is not None else None
-
-            # Handle "v.m." (varia molto)
-            observations = []
-            if 'v.m.' in name:
-                for factor in [0.8,1.0,1.2]:
-                    observations.append({'cho_ratio': cho_ratio*factor if cho_ratio is not None else None,
-                                         'protein_ratio': protein_ratio*factor if protein_ratio is not None else None,
-                                         'fiber_ratio': fiber_ratio*factor if fiber_ratio is not None else None,
-                                         'fat_ratio': fat_ratio*factor if fat_ratio is not None else None})
-
-            else:
-                observations.append({'cho_ratio':cho_ratio,
-                                     'protein_ratio':protein_ratio,
-                                     'fiber_ratio':fiber_ratio,
-                                     'fat_ratio':fat_ratio})
-
-            for observation in observations:
-                FoodObservation.objects.create(created_by = request.user,
-                                               food = food,
-                                               cho_ratio = observation['cho_ratio'],
-                                               protein_ratio = observation['protein_ratio'],
-                                               fiber_ratio = observation['fiber_ratio'],
-                                               fat_ratio = observation['fat_ratio'])
+        loaded_count, errors = load_foods_from_csv('/tmp/{}'.format(fild_uuid), request.user)
         data['errors'] = errors
         data['loaded'] = True
         logger.info('Deleted all content and loaded database')

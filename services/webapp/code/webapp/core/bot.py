@@ -247,6 +247,7 @@ class Bot():
                 elif serving_size == 'l':
                     size_name = 'grande'
 
+                # logger.debug('Got choobservations: %s', cho_observations)
                 if cho_observations:
                     if len(servings) == len(foods):
                         if servings_all_the_same:
@@ -347,13 +348,13 @@ class Bot():
                         warn_be_more_specific_pieces = True
 
         if warn_be_more_specific_servings and warn_be_more_specific_pieces:
-            reply += ' Per avere informazioni sulle porzioni e/o i pezzi, sii più specifico.'
+            reply += 'Per avere informazioni sulle porzioni e/o i pezzi sii più specifico, sono troppo diverse/i per questi risultati.'
 
         if warn_be_more_specific_servings and not warn_be_more_specific_pieces:
-            reply += ' Per avere informazioni sulle porzioni, sii più specifico.'
+            reply += 'Per avere informazioni sulle porzioni sii più specifico, sono troppo diverse per questi risultati.'
 
         if not warn_be_more_specific_servings and warn_be_more_specific_pieces:
-            reply += ' Per avere informazioni sui pezzi, sii più specifico.'
+            reply += 'Per avere informazioni sui pezzi, sii più specifico, sono troppo diversi per quetsi risultati.'
 
         # See also
         if see_also_foods:
